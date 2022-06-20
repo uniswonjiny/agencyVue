@@ -1,0 +1,9 @@
+{
+  "dashboard": "오늘",
+  "dashboardItems": {
+    "versionOne": "첫번째",
+    "versionTwo": "두번째",
+    "versionThree": "세번째",
+    "versionFour": "네번째"
+  }
+}
