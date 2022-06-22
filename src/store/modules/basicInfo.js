@@ -9,11 +9,18 @@ export default {
     agencyRecruitInfo: {}, // 모집정보
     transactionList: [], // 거래내역
     transactionCount: 0, // 거래내역 총갯수
+    transactionAmount: 0, // 거래내역 총금액
     agencyCountInfo: {}, // 대리점 지사 소속 정보
-    agencyList: [], // 대리점 목록
+    agencyList: [], // 대리점관리 목록
+    agencyCount: 0, // 대리점관리 전체숫자
     settlementInfo: null, // 대리점 정산서
     noticeList: [], // 공지사항 목록
-    noticeTotalCount: 0, // 공지사항 전체목록
+    noticeTotalCount: 0, // 공지사항 전체목록,
+    merchantManagementList: [], // 가맹점 목록
+    merchantManagementCount: 0, // 가맹점 전체 숫자
+    reqAgencyList: [] , // 등록요청대리점 목록
+    reqAgencycount: 0 , // 등록요청대리점 목록 개수
+
   },
   getters: {
     agencyBasicInfo: state => state.agencyBasicInfo,
@@ -21,6 +28,9 @@ export default {
     agencyRecruitInfo: state => state.agencyRecruitInfo,
     agencyCountInfo: state => state.agencyCountInfo,
     transactionCount: state => state.transactionCount,
+    transactionAmount: state => {
+      return currency(state.transactionAmount)
+    },
     transactionList: state => {
       // 시간 변경하려고함
       for (const el of state.transactionList) {
@@ -31,6 +41,7 @@ export default {
       return state.transactionList
     },
     agencyList: state => state.agencyList,
+    agencyCount: state => state.agencyCount,
     noticeTotalCount: state => state.noticeTotalCount,
     noticeList: state => {
       for (const el of state.noticeList) {
@@ -89,6 +100,8 @@ export default {
         }
       }
     },
+    merchantManagementList: state => state.merchantManagementList,
+    merchantManagementCount: state => state.merchantManagementCount,
   },
   mutations: {
     setBasicInfo (state, info) {
@@ -109,8 +122,14 @@ export default {
     setTransactionCount (state, val) {
       state.transactionCount = val
     },
+    setTransactionAmount (state, val) {
+      state.transactionAmount = val
+    },
     setAgencyList (state, list) {
       state.agencyList = list
+    },
+    setAgencyCount (state, val) {
+      state.agencyCount = val
     },
     setSettlementInfo (state, info) {
       state.settlementInfo = info
@@ -120,6 +139,18 @@ export default {
     },
     setNoticeCount (state, val) {
       state.noticeTotalCount = val
+    },
+    setMerchantManagementList (state, list) {
+      state.merchantManagementList = list
+    },
+    setMerchantManagementCount (state, val) {
+      state.merchantManagementCount = val
+    },
+    setReqAgencyList (state, list) {
+      state.reqAgencyList = list
+    },
+    setReqAgencyCount (state, val) {
+      state.reqAgencycount = val
     },
   },
   actions: {
@@ -151,7 +182,7 @@ export default {
         })
     },
     // setAgencyBelongInfo 속정보 가져오기
-    agencyCount ({ commit, getters }) {
+    getAgencyCount ({ commit, getters }) {
       commit('setLoading', true)
       return axios({
         method: 'get',
@@ -168,7 +199,7 @@ export default {
         })
     },
     // 매출조회
-    getTransactionList ({ commit }, payLoad) {
+    fetchTransactionList ({ commit }, payLoad) {
       commit('setLoading', true)
       return axios({
         method: 'post',
@@ -176,6 +207,7 @@ export default {
         data: payLoad,
       }).then(res => {
         commit('setTransactionList', res.data.data)
+        commit('setTransactionAmount', res.data.amount)
         return commit('setTransactionCount', res.data.count)
       }).catch(error => {
         console.log(error)
@@ -187,14 +219,15 @@ export default {
         })
     },
     // 대리점 지사 정보 조회
-    agencyList ({ commit }, payload) {
+    fetchAgencyList ({ commit }, payload) {
       commit('setLoading', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/agencyList',
         data: payload,
       }).then(res => {
-        commit('setAgencyList', res.data)
+        commit('setAgencyList', res.data.list)
+        return commit('setAgencyCount', res.data.count)
       }).catch(error => {
         console.log(error)
         throw error.response.data.message
@@ -205,7 +238,7 @@ export default {
         })
     },
     // 대리점 정산서
-    getSettlementInfo ({ commit, getters }, val) {
+    fetchSettlementInfo ({ commit, getters }, val) {
       commit('setLoading', true)
       return axios({
         method: 'get',
@@ -222,7 +255,7 @@ export default {
         })
     },
     // 공지사항
-    getNoticeList ({ commit, getters }, payload) {
+    fetchNoticeList ({ commit, getters }, payload) {
       commit('setLoading', true)
       console.log(payload)
       return axios({
@@ -241,5 +274,63 @@ export default {
           commit('setLoading', false)
         })
     },
+    // 가맹점
+    fetchMerchantManagementList ({ commit, getters }, payload) {
+      commit('setLoading', true)
+      return axios({
+        method: 'post',
+        url: baseUrl + '/agency/merchantManagementList',
+        data: payload,
+      }).then(res => {
+        commit('setMerchantManagementCount', res.data.count)
+        return commit('setMerchantManagementList', res.data.data)
+      }).catch(error => {
+        console.log(error)
+        throw error.response.data.message
+      })
+        .finally(_ => {
+          commit('clearError')
+          commit('setLoading', false)
+        })
+    },
+    // 대리점 등록 하기
+    regAgency( { dispatch, commit }, payload) {
+      commit('setLoading', true)
+      return axios({
+        method: 'post',
+        url: baseUrl + '/agency/insertRegAgency',
+        data: payload,
+      }).then(res => {
+        return dispatch('fetchRegAgencyList', payload)
+      }).catch(error => {
+        console.log(error)
+        throw error.response.data.message
+      })
+        .finally(_ => {
+          commit('clearError')
+          commit('setLoading', false)
+        })
+    },
+
+    // 대리점 등록 요청 목록
+  fetchRegAgencyList({ commit } , payload) {
+    commit('setLoading', true)
+    return axios({
+      method: 'post',
+      url: baseUrl + '/agency/selectRegAgencyList',
+      data: payload,
+    }).then(res => {
+      commit('setReqAgencyCount', res.data.count)
+      return commit('setReqAgencyList', res.data.list)
+    }).catch(error => {
+      console.log(error)
+      throw error.response.data.message
+    })
+      .finally(_ => {
+        commit('clearError')
+        commit('setLoading', false)
+      })
+  }
+
   },
 }

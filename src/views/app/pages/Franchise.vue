@@ -1,16 +1,9 @@
 <template>
   <div>
     <v-row justify="center">
+    <!-- 대리점인경우 -->
       <v-col
-        cols="12"
-      >
-        <v-card dark>
-          <h5 class=" my-auto py-auto font-weight-medium">
-            대리점 로그인
-          </h5>
-        </v-card>
-      </v-col>
-      <v-col
+        v-if="loggedInUser.dealer_kind && loggedInUser.dealer_kind == 34"
         cols="12"
         xl="6"
         sm="8"
@@ -101,6 +94,7 @@
                   >
                     <search-add
                       :search-list="searchList"
+                      @searchFormEvent="this.searchFormEvent"
                     />
                   </v-col>
                 </v-row>
@@ -141,6 +135,8 @@
                         <v-expansion-panels
                           flat
                           class="mx-0"
+                          v-for="(item, index) in merchantManagementList"
+                          :key="index"
                         >
                           <v-expansion-panel>
                             <v-expansion-panel-header
@@ -149,25 +145,25 @@
                             >
                               <v-row no-gutters>
                                 <v-col cols="2">
-                                  1
+                                  {{ item.no }}
                                 </v-col>
                                 <v-col
                                   cols="4"
                                   class="text-center"
                                 >
-                                  ididididi
+                                  {{ item.usid }}
                                 </v-col>
                                 <v-col
                                   cols="4"
                                   class="text-center"
                                 >
-                                  아이디
+                                  {{ item.companyName }}
                                 </v-col>
                                 <v-col
                                   cols="2"
                                   class="text-right"
                                 >
-                                  대표명
+                                  {{ item.mberName }}
                                 </v-col>
                               </v-row>
                             </v-expansion-panel-header>
@@ -187,7 +183,7 @@
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        2022/01/02 14:00:01
+                                        {{ item.creatDt }}
                                       </p>
                                     </div>
                                     <div
@@ -197,12 +193,12 @@
                                         class="text--disabled mb-1 text-15 mr-2"
                                         style="min-width: 100px"
                                       >
-                                        모집대리점
+                                        정산코드
                                       </p>
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        오메가대리점2
+                                        {{ item.calculateType }}
                                       </p>
                                     </div>
                                     <div
@@ -212,12 +208,12 @@
                                         class="text--disabled mb-1 text-15 mr-2"
                                         style="min-width: 100px"
                                       >
-                                        대표자명
+                                        수수료율
                                       </p>
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        AVB
+                                        {{ item.feeRate }}
                                       </p>
                                     </div>
                                     <div
@@ -232,7 +228,7 @@
                                       <p
                                         class="text-success mb-1 text-15 text-sm-caption"
                                       >
-                                        서울시 중구 디지털로222 벽산아이티센터5차1200호
+                                        {{ item.adres }}
                                       </p>
                                     </div>
                                     <div
@@ -247,7 +243,7 @@
                                       <p
                                         class="text-success mb-1 text-15 "
                                       >
-                                        02-xxxx-xxxxx
+                                       {{ item.mberMobile }}
                                       </p>
                                     </div>
                                     <div
@@ -262,7 +258,7 @@
                                       <p
                                         class="text-success mb-1 text-15 "
                                       >
-                                        aaaa@egmail.com
+                                        {{ item.email }}
                                       </p>
                                     </div>
                                     <div
@@ -272,12 +268,12 @@
                                         class="text--disabled mb-1 text-15 mr-2"
                                         style="min-width: 100px"
                                       >
-                                        게좌
+                                        게좌정보
                                       </p>
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        111111-025-5547897
+                                        {{ item.bankName }} {{ item.accountNo }} {{ item.depositor }}
                                       </p>
                                     </div>
                                   </div>
@@ -292,8 +288,9 @@
                       <td
                         colspan="4"
                         class="text-right"
+                        v-if="merchantManagementList.length >0"
                       >
-                        10 개
+                        {{ merchantManagementCount }} 개
                       </td>
                     </tr>
                   </tbody>
@@ -313,22 +310,17 @@
               <v-pagination
                 v-model="current"
                 class="my-4"
-                :length="paginate_total"
+                :length="pageCount"
+                @next="pageHandler()"
+                @previous = "pageHandler()"
+                @input = "pageHandler()"
               />
             </v-container>
           </v-col>
         </v-row>
       </v-col>
       <v-col
-        cols="12"
-      >
-        <v-card dark>
-          <h5 class="pa-2 font-weight-medium">
-            지사 로그인
-          </h5>
-        </v-card>
-      </v-col>
-      <v-col
+        v-if="loggedInUser.dealer_kind && loggedInUser.dealer_kind == 33"
         cols="12"
         xl="6"
         sm="8"
@@ -336,26 +328,22 @@
       >
         <v-row>
           <v-col cols="12">
-            <div class="d-flex pr-1 justify-space-between pb-2">
-              <div class="d-flex align-center">
-                <v-icon
-                  small
-                  color="primary"
-                  class="mr-3"
-                >
-                  mdi-circle
-                </v-icon>
-                <h5 class="mb-0 mr-2 font-weight-bold">
-                  {{selectedMenu}}
-                </h5>
-                <v-overflow-btn
-                  dense
-                  class="mx-auto"
-                  :items="dropdown_edit"
-                  item-value="text"
-                  v-model="selectedMenu"
-                />
-              </div>
+            <div  class="d-flex">
+              <v-icon
+                small
+                color="primary"
+                class="mr-3"
+                chips
+              >
+                mdi-circle
+              </v-icon>
+              <v-overflow-btn
+                dense
+                class="mx-auto"
+                :items="dropdown_edit"
+                item-value="text"
+                v-model="selectedMenu"
+              />
             </div>
           </v-col>
           <v-col>
@@ -426,6 +414,7 @@
                   >
                     <search-add
                       :search-list="searchList"
+                      @searchFormEvent="this.searchFormEvent"
                     />
                   </v-col>
                 </v-row>
@@ -447,7 +436,7 @@
                         순번
                       </th>
                       <th class="text-center">
-                        소속<br/>대리점
+                        소속<br />대리점
                       </th>
                       <th class="text-center">
                         상호
@@ -466,6 +455,8 @@
                         <v-expansion-panels
                           flat
                           class="mx-0"
+                          v-for="(item, index) in merchantManagementList"
+                          :key="index"
                         >
                           <v-expansion-panel>
                             <v-expansion-panel-header
@@ -474,25 +465,25 @@
                             >
                               <v-row no-gutters>
                                 <v-col cols="2">
-                                  1
+                                  {{ item.no }}
                                 </v-col>
                                 <v-col
                                   cols="4"
                                   class="text-center"
                                 >
-                                  알파플러스대리점
+                                  {{ item.bossName }}
                                 </v-col>
                                 <v-col
                                   cols="4"
                                   class="text-center"
                                 >
-                                  시그마대리점1
+                                  {{ item.companyName }}
                                 </v-col>
                                 <v-col
                                   cols="2"
                                   class="text-right"
                                 >
-                                  5
+                                  {{ item.mberName }}
                                 </v-col>
                               </v-row>
                             </v-expansion-panel-header>
@@ -512,7 +503,7 @@
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        2022/01/02 14:00:01
+                                        {{ item.creatDt }}
                                       </p>
                                     </div>
                                     <div
@@ -527,7 +518,7 @@
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        오메가대리점2
+                                        {{ item.bossName }}
                                       </p>
                                     </div>
                                     <div
@@ -542,7 +533,7 @@
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        AVB
+                                        {{ item.mberName }}
                                       </p>
                                     </div>
                                     <div
@@ -557,7 +548,7 @@
                                       <p
                                         class="text-success mb-1 text-15 text-sm-caption"
                                       >
-                                        서울시 중구 디지털로222 벽산아이티센터5차1200호
+                                        {{ item.adres }}
                                       </p>
                                     </div>
                                     <div
@@ -572,7 +563,7 @@
                                       <p
                                         class="text-success mb-1 text-15 "
                                       >
-                                        02-xxxx-xxxxx
+                                        {{ item.mberMobile }}
                                       </p>
                                     </div>
                                     <div
@@ -587,7 +578,7 @@
                                       <p
                                         class="text-success mb-1 text-15 "
                                       >
-                                        aaaa@egmail.com
+                                        {{ item.email }}
                                       </p>
                                     </div>
                                     <div
@@ -597,155 +588,12 @@
                                         class="text--disabled mb-1 text-15 mr-2"
                                         style="min-width: 100px"
                                       >
-                                        게좌
+                                        계좌
                                       </p>
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        111111-025-5547897
-                                      </p>
-                                    </div>
-                                  </div>
-                                </v-card-text>
-                              </base-card>
-                            </v-expansion-panel-content>
-                          </v-expansion-panel>
-                          <v-expansion-panel>
-                            <v-expansion-panel-header
-                              hide-actions
-                              class="text-caption mx-0 "
-                            >
-                              <v-row no-gutters>
-                                <v-col cols="2">
-                                  2
-                                </v-col>
-                                <v-col
-                                  cols="4"
-                                  class="text-center"
-                                >
-                                  알파플러스대리점
-                                </v-col>
-                                <v-col
-                                  cols="4"
-                                  class="text-center"
-                                >
-                                  시그마대리점1
-                                </v-col>
-                                <v-col
-                                  cols="2"
-                                  class="text-right"
-                                >
-                                  5
-                                </v-col>
-                              </v-row>
-                            </v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                              <base-card class="mb-3">
-                                <v-card-text>
-                                  <div class="mt-3">
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        등록일
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15"
-                                      >
-                                        2022/01/02 14:00:01
-                                      </p>
-                                    </div>
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        모집대리점
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15"
-                                      >
-                                        오메가대리점2
-                                      </p>
-                                    </div>
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        대표자명
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15"
-                                      >
-                                        AVB
-                                      </p>
-                                    </div>
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        주소
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15 text-sm-caption"
-                                      >
-                                        서울시 중구 디지털로222 벽산아이티센터5차1200호
-                                      </p>
-                                    </div>
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        연락처
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15 "
-                                      >
-                                        02-xxxx-xxxxx
-                                      </p>
-                                    </div>
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        이메일
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15 "
-                                      >
-                                        aaaa@egmail.com
-                                      </p>
-                                    </div>
-                                    <div
-                                      class="d-flex justify-space-between"
-                                    >
-                                      <p
-                                        class="text--disabled mb-1 text-15 mr-2"
-                                        style="min-width: 100px"
-                                      >
-                                        게좌
-                                      </p>
-                                      <p
-                                        class="text-success mb-1 text-15"
-                                      >
-                                        111111-025-5547897
+                                        {{ item.bankName }} {{ item.accountNo }} {{ item.depositor }}
                                       </p>
                                     </div>
                                   </div>
@@ -760,8 +608,9 @@
                       <td
                         colspan="4"
                         class="text-right"
+                        v-if="merchantManagementList.length >0"
                       >
-                        10 개
+                        {{ merchantManagementCount }} 개
                       </td>
                     </tr>
                   </tbody>
@@ -777,13 +626,14 @@
             lg="6"
             xl="4"
           >
-            <v-container class="max-width">
-              <v-pagination
-                v-model="current"
-                class="my-4"
-                :length="paginate_total"
-              />
-            </v-container>
+            <v-pagination
+              v-model="current"
+              class="my-4"
+              :length="pageCount"
+              @next="pageHandler()"
+              @previous = "pageHandler()"
+              @input = "pageHandler()"
+            />
           </v-col>
         </v-row>
       </v-col>
@@ -793,18 +643,50 @@
 
 <script>
   import SearchAdd from '@/components/base/SearchAdd'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
+  import { dataType } from '@/filter/filter'
   export default {
     name: 'Franchise',
     components: {
       SearchAdd,
     },
+    created () {
+      const todayDate = new Date()
+      const todayYear = todayDate.getUTCFullYear()
+      const todayMonth = Number(todayDate.getUTCMonth()) + 1 < 10 ? '0' + (Number(todayDate.getUTCMonth()) + 1) : Number(todayDate.getUTCMonth()) + 1
+      const todayDay = Number(todayDate.getUTCDate()) < 10 ? '0' + todayDate.getUTCDate() : todayDate.getUTCDate()
+      const today = todayYear + '-' + todayMonth + '-' + todayDay
+      this.dates = ['2010-01-01', today]
+      this.initData()
+    },
+
+    mounted () {
+      this.payLoad.startNo = 0
+      this.payLoad.endNo = 10
+      this.payLoad.startDt = this.dates[0]
+      this.payLoad.endDt = this.dates[1]
+      this.payLoad.userId = this.loggedInUser.dealer_id
+      this.payLoad.dealerKind = this.loggedInUser.dealer_kind
+
+    },
     data: () => ({
-      selectedMenu: '지사가맹점리스트',
+      selectedMenu: '가맹점리스트',
       current: 1,
-      paginate: 5,
-      paginate_total: 10,
-      dates: ['2022-04-01', '2022-04-20'],
+      pageSize: 10,
+      pageCount: 1,
+      dates: [],
       menuTwo: false,
+      payLoad: {
+        userId: '',
+        dealerId: '',
+        dealerName: '',
+        dealerMemberName: '',
+        startDt: '',
+        endDt: '',
+        dealerKind: '',
+        startNo: 1,
+        endNo: 10,
+      },
       searchList: [
         {
           text: '대리점',
@@ -823,16 +705,71 @@
         },
       ],
       dropdown_edit: [
-        { text: '가맹점리스트' },
-        { text: '대리점가맹점리스트' },
+        { text: '가맹점리스트', type: 'A' },
+        { text: '대리점가맹점리스트', type: 'B' },
       ],
     }),
     computed: {
+      ...mapGetters(['loggedInUser', 'merchantManagementList', 'merchantManagementCount']),
       dateRangeText () {
         return this.dates.join(' ~ ')
       },
     },
-    methods: {},
+    methods: {
+      ...mapActions(['fetchMerchantManagementList']),
+      ...mapMutations(['setMerchantManagementCount', 'setMerchantManagementList']),
+      initData () {
+        if (this.dates.length === 0) {
+          const today = dataType()
+          // let preDay = new Date()
+          // preDay.setDate(1)
+          // //preDay.setMonth(preDay.getMonth() - 1)
+          // preDay = dataType(preDay)
+          this.dates = [today, today]
+        }
+        this.current = 1
+        this.payLoad = {
+          dealerKind: this.loggedInUser.dealer_kind,
+          userId: this.loggedInUser.dealer_id,
+          dealerId: '',
+          dealerName: '',
+          dealerMemberName: '',
+          startDt: this.dates[0],
+          endDt: this.dates[1],
+          startNo: 1, // 시작 페이지
+          endNo: this.pageSize, // 종료 페이지 번호
+          type: '',
+        }
+
+
+        // vuex 초기화
+        this.setMerchantManagementList([])
+        this.setMerchantManagementCount = 0
+      },
+      searchFormEvent (arrObj) {
+        if (!!arrObj && arrObj.length > 0) {
+          for (const el of arrObj) {
+            if (el.key === 'agency') this.payLoad.cmpnm = el.value
+            if (el.key === 'userId') this.payLoad.dealerId = el.value
+            if (el.key === 'name') this.payLoad.bprprr = el.value
+          }
+        }
+        if (this.loggedInUser.dealer_kind === 33) {
+          if (this.selectedMenu === '가맹점리스트') this.payLoad.type = 'a'
+          if (this.selectedMenu === '대리점가맹점리스트') this.payLoad.type = 'b'
+        }
+        this.payLoad.startDt = this.dates[0]
+        this.payLoad.endDt = this.dates[1]
+        this.fetchMerchantManagementList(this.payLoad).then(_ => {
+          this.pageCount = Math.ceil(this.merchantManagementCount / this.pageSize)
+        })
+      },
+      pageHandler () {
+        this.payLoad.startNo = (this.current - 1) * this.pageSize + 1
+        this.payLoad.endNo = this.pageSize * this.current
+        this.searchFormEvent()
+      },
+    },
   }
 </script>
 

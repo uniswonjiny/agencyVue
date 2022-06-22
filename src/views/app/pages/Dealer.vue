@@ -73,6 +73,7 @@
                 :sub-heading="directCount"
                 main-icon-text-color="primary--text text--lighten-4"
                 main-icon-name="mdi-lighthouse-on"
+                class="ml-5"
               />
             </v-col>
             <v-col
@@ -84,6 +85,7 @@
                 :sub-heading="inDirectCount"
                 main-icon-text-color="warning--text text--lighten-4"
                 main-icon-name="mdi-handshake-outline"
+                class="mr-5"
               />
             </v-col>
           </v-row>
@@ -226,7 +228,7 @@
                                   cols="4"
                                   class="text-center"
                                 >
-                                  {{ item.dealerKind }}
+                                  {{ item.dealerKind == 33 ? '지사' : '대리점' }}
                                 </v-col>
                                 <v-col
                                   cols="4"
@@ -238,7 +240,7 @@
                                   cols="2"
                                   class="text-center"
                                 >
-                                  {{ item.agencyCount }}
+                                  {{ item.count }}
                                 </v-col>
                               </v-row>
                             </v-expansion-panel-header>
@@ -318,7 +320,7 @@
                                       <p
                                         class="text-success mb-1 text-15 "
                                       >
-                                        {{ item.mTelno }}
+                                        {{ item.mtelno }}
                                       </p>
                                     </div>
                                     <div
@@ -348,7 +350,7 @@
                                       <p
                                         class="text-success mb-1 text-15"
                                       >
-                                        {{ item.email }}
+                                        {{ item.bankName }} - {{ item.bankSerial }} - {{ item.bankUser }}
                                       </p>
                                     </div>
                                   </div>
@@ -376,7 +378,10 @@
               <v-pagination
                 v-model="current"
                 class="my-4"
-                :length="paginate_total"
+                :length="pageCount"
+                @next="pageHandler()"
+                @previous = "pageHandler()"
+                @input = "pageHandler()"
               />
             </v-container>
           </v-col>
@@ -398,10 +403,29 @@
   import analyticTwoCard from '@/components/card/AnalyticCardVersionTwo'
   import CryptoCurrencyCard from '@/components/card/CryptoCurrencyCard'
   import SearchAdd from '@/components/base/SearchAdd'
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
+  import { dataType } from '@/filter/filter'
 
   export default {
     name: 'Dealer',
+    created () {
+      const todayDate = new Date()
+      const todayYear = todayDate.getUTCFullYear()
+      const todayMonth = Number(todayDate.getUTCMonth()) + 1 < 10 ? '0' + (Number(todayDate.getUTCMonth()) + 1) : Number(todayDate.getUTCMonth()) + 1
+      const todayDay = Number(todayDate.getUTCDate()) < 10 ? '0' + todayDate.getUTCDate() : todayDate.getUTCDate()
+      const today = todayYear + '-' + todayMonth + '-' + todayDay
+      this.dates = ['2010-01-01', today]
+      this.initData()
+    },
+    mounted () {
+      this.payLoad.startNo = 0
+      this.payLoad.endNo = 10
+      this.payLoad.startDt = this.dates[0]
+      this.payLoad.endDt = this.dates[1]
+      this.payLoad.userId = this.loggedInUser.dealer_id
+      this.payLoad.dealerKind = this.loggedInUser.dealer_kind
+      this.getAgencyCount()
+    },
     components: {
       'analytic-one-card': analyticOneCard,
       'analytic-two-card': analyticTwoCard,
@@ -410,13 +434,21 @@
     },
     data: () => ({
       current: 1,
-      paginate: 5,
-      paginate_total: 10,
+      pageSize: 10,
+      pageCount: 1,
       dates: ['2022-04-01', '2022-04-20'],
-      value1: '',
-      value2: '',
-      value3: '',
-
+      payLoad: {
+        userId: '',
+        dealerId: '',
+        dealerName: '',
+        dealerMemberName: '',
+        startDt: '',
+        endDt: '',
+        dealerKind: '',
+        startNo: 0, // 시작 페이지
+        endNo: 10, // 종료 페이지 번호
+        // type: 'a', // 지사인 경우 사용 소속지사 추천 지사 구분용 a 지사 c 추천지사
+      },
       menuTwo: false,
       searchList: [
         {
@@ -446,55 +478,13 @@
           value: 'name',
         },
       ],
-      items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
-      navbarOptions: {
-        elementId: 'main-navbar',
-        isUsingVueRouter: true,
-        mobileBreakpoint: 992,
-        brandImagePath: './',
-        brandImageAltText: 'brand-image',
-        collapseButtonOpenColor: '#661c23',
-        collapseButtonCloseColor: '#661c23',
-        showBrandImageInMobilePopup: true,
-        ariaLabelMainNav: 'Main Navigation',
-        tooltipAnimationType: 'shift-away',
-        menuOptionsLeft: [
-          {
-            type: 'link',
-            text: 'Dashboard',
-            iconLeft: '<i class="mdi mdi-view-dashboard"></i>',
-            subMenuOptions: [
-              {
-                type: 'link',
-                text: 'Learning Management',
-                path: { name: 'learning-management' },
-                iconLeft: '<i class="mdi mdi-circle-medium"></i>',
-              }],
-
-          },
-        ],
-      },
     }),
-    mounted () {
-      const todayDate = new Date()
-      const todayYear = todayDate.getUTCFullYear()
-      const todayMonth = Number(todayDate.getUTCMonth()) + 1 < 10 ? '0' + (Number(todayDate.getUTCMonth()) + 1) : Number(todayDate.getUTCMonth()) + 1
-      const todayDay = Number(todayDate.getUTCDate()) < 10 ? '0' + todayDate.getUTCDate() : todayDate.getUTCDate()
-      const today = todayYear + '-' + todayMonth + '-' + todayDay
-      // 처음 오늘날짜만 조회 하도록
-      this.dates = [today, today]
-      this.agencyCount()
-    },
+
     computed: {
       dateRangeText () {
         return this.dates.join(' ~ ')
       },
-      ...mapGetters(['loggedInUser', 'agencyCountInfo', 'agencyBasicInfo', 'agencyList']),
+      ...mapGetters(['loggedInUser', 'agencyCountInfo', 'agencyBasicInfo', 'agencyList', 'agencyCount']),
       directCount () {
         return this.agencyCountInfo.directCount + '개'
       },
@@ -503,30 +493,53 @@
       },
     },
     methods: {
-      ...mapActions(['agencyCount', 'agencyList']),
-      searchFormEvent (arr) {
-        const payLoad = {
+      ...mapActions(['getAgencyCount', 'fetchAgencyList']),
+      ...mapMutations(['setAgencyList', 'setAgencyCount']),
+      initData () {
+        if (this.dates.length === 0) {
+          const today = dataType()
+          // let preDay = new Date()
+          // preDay.setDate(1)
+          // //preDay.setMonth(preDay.getMonth() - 1)
+          // preDay = dataType(preDay)
+          this.dates = [today, today]
+        }
+        this.current = 1
+        this.payLoad = {
+          dealerKind: this.loggedInUser.dealer_kind,
           userId: this.loggedInUser.dealer_id,
-          dealerId: '', // 산하 아이디
-          dealerName: '', // 산하 대리점 이름
-          dealerMemberName: '', // 산하 대리점 대표자이름
+          dealerId: '',
+          dealerName: '',
+          dealerMemberName: '',
           startDt: this.dates[0],
           endDt: this.dates[1],
-          dealerKind: this.agencyBasicInfo.dealerKind,
-          startPageNumber: 0, // 시작 페이지
-          endPageNumber: 10, // 종료 페이지 번호
-          type: 'a', // 지사인 경우 사용 소속지사 추천 지사 구분용 a 지사 c 추천지사
+          startNo: 1, // 시작 페이지
+          endNo: this.pageSize, // 종료 페이지 번호
         }
-
-        for (const el of arr) {
-          if (el.key === 'agency') payLoad.dealerName = el.value
-          if (el.key === 'userId') payLoad.dealerId = el.value
-          if (el.key === 'name') payLoad.dealerMemberName = el.value
-        }
-
-        this.agencyList(payLoad)
+        // vuex 초기화
+        this.setAgencyList([])
+        this.setAgencyCount = 0
       },
 
+      searchFormEvent (arrObj) {
+        if (!!arrObj && arrObj.length > 0) {
+          for (const el of arrObj) {
+            if (el.key === 'agency') this.payLoad.cmpnm = el.value
+            if (el.key === 'userId') this.payLoad.dealerId = el.value
+            if (el.key === 'name') this.payLoad.bprprr = el.value
+          }
+        }
+        this.payLoad.startDt = this.dates[0]
+        this.payLoad.endDt = this.dates[1]
+        this.fetchAgencyList(this.payLoad).then(_ => {
+          this.pageCount = Math.ceil(this.agencyCount / this.pageSize)
+        })
+      },
+      pageHandler () {
+        this.payLoad.startNo = (this.current - 1) * this.pageSize + 1
+        this.payLoad.endNo = this.pageSize * this.current
+        this.searchFormEvent()
+      },
     },
   }
 </script>

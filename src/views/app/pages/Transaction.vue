@@ -138,10 +138,11 @@
                                   {{ item.no}}
                                 </v-col>
                                 <v-col cols="4">
-                                  {{ item.confmDt }} {{ item.confmTime }}
+                                  {{ item.confmDt }} <br/> {{ item.confmTime }}
                                 </v-col>
                                 <v-col cols="3">
-                                  {{ item.companyName }}
+                                  {{ item.companyName }} <br/>
+                                  ({{ item.mberName }})
                                 </v-col>
                                 <v-col cols="3">
                                   {{ item.amount }} 원
@@ -260,19 +261,17 @@
                     </tr>
                   </tbody>
                 </v-simple-table>
+                <div
+                  class="text-right"
+                  v-if="transactionList.length >0"
+                >
+                {{ transactionCount }} 건 / {{ transactionAmount }} 원
+                </div>
               </v-card-text>
             </base-card>
           </v-col>
         </v-row>
         <div class="text-center">
-          <v-container>
-            <v-row justify="center">
-              <v-col
-                cols="12"
-                sm="8"
-                lg="6"
-                xl="4"
-              >
                 <v-container class="max-width">
                   <v-pagination
                     v-model="current"
@@ -283,9 +282,6 @@
                     @input = "pageHandler()"
                   />
                 </v-container>
-              </v-col>
-            </v-row>
-          </v-container>
         </div>
         <warning-one
           :dialog="warningDialog"
@@ -300,7 +296,7 @@
 <script>
   import WarningOne from '@/components/dialog/WarningOne'
   import SearchAdd from '@/components/base/SearchAdd'
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { dataType } from '@/filter/filter'
 
   export default {
@@ -309,14 +305,16 @@
       SearchAdd,
     },
     computed: {
-      ...mapGetters(['transactionList', 'loggedInUser', 'transactionCount']),
+      ...mapGetters(['transactionList', 'loggedInUser', 'transactionCount', 'transactionAmount']),
       dateRangeText () {
         return this.dates.join(' ~ ')
       },
     },
-    created () {
+
+    mounted () {
       this.initData()
     },
+
     data: () => ({
       searchList: [
         {
@@ -368,21 +366,24 @@
     }),
 
     methods: {
-      ...mapActions(['getTransactionList']),
+      ...mapActions(['fetchTransactionList']),
+      ...mapMutations(['setTransactionList', 'setTransactionCount']),
+      // 데이터 초기화
       initData () {
         if (this.dates.length === 0) {
           const today = dataType()
-          let preDay = new Date()
-          preDay.setMonth(preDay.getMonth() - 10)
-          preDay = dataType(preDay)
-          this.dates = [preDay, today]
+          // let preDay = new Date()
+          // preDay.setDate(1)
+          // //preDay.setMonth(preDay.getMonth() - 1)
+          // preDay = dataType(preDay)
+          this.dates = [today, today]
         }
         this.current = 1
         this.searchParam = {
           startConfmDt: this.dates[0], // 거래날짜 시작일
           endConfmDt: this.dates[1], // 거래날자 종료일
-          startPageNumber: 1, // 시작 페이지
-          endPageNumber: this.pageSize, // 종료 페이지 번호
+          startNo: 1, // 시작 페이지
+          endNo: this.pageSize, // 종료 페이지 번호
           companyName: null, // 가맹점명
           bprprr: null, // 대표자명
           mberName: null, // 판매자성명
@@ -392,17 +393,19 @@
           dealerKind: this.loggedInUser.dealer_kind,
           userId: this.loggedInUser.dealer_id,
         }
+        // vuex 초기화
+        this.setTransactionList([])
+        this.setTransactionCount = 0
       },
       dialogEvent (val) {
         this.warningDialog = val
       },
       pageHandler () {
-        this.searchParam.startPageNumber = (this.current - 1) * this.pageSize + 1
-        this.searchParam.endPageNumber = this.pageSize * this.current
+        this.searchParam.startNo = (this.current - 1) * this.pageSize + 1
+        this.searchParam.endNo = this.pageSize * this.current
         this.searchFormEvent()
       },
       searchFormEvent (arrObj) {
-
         if (!!arrObj && arrObj.length > 0) {
           this.initData()
           for (const obj of arrObj) {
@@ -416,7 +419,7 @@
         }
         this.searchParam.startConfmDt = this.dates[0]
         this.searchParam.endConfmDt = this.dates[1]
-        this.getTransactionList(this.searchParam)
+        this.fetchTransactionList(this.searchParam)
           .then(_ => {
             this.pageCount = Math.ceil(this.transactionCount / this.pageSize)
           })

@@ -531,11 +531,11 @@
 
       this.agencyCount()
 
-      this.getNoticeList({
+      this.fetchNoticeList({
         startDt: preDay,
         endDt: today,
-        startPageNumber: 1,
-        endPageNumber: 5,
+        startNo: 1,
+        endNo: 5,
         title: null,
         content: null,
         type: null,
@@ -546,7 +546,7 @@
       ...mapGetters(['agencyCountInfo', 'loggedInUser', 'noticeList']),
     },
     methods: {
-      ...mapActions(['agencyCount', 'getNoticeList']),
+      ...mapActions(['agencyCount', 'fetchNoticeList']),
     },
   }
 </script>

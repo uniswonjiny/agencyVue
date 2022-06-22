@@ -262,7 +262,7 @@
       this.searchFormEvent()
     },
     methods: {
-      ...mapActions(['getNoticeList']),
+      ...mapActions(['fetchNoticeList']),
       initData () {
         const today = dataType()
         let preDay = new Date()
@@ -272,8 +272,8 @@
         this.searchParam = {
           startDt: preDay,
           endDt: today,
-          startPageNumber: 1,
-          endPageNumber: this.pageSize,
+          startNo: 1,
+          endNo: this.pageSize,
           title: null,
           content: null,
           type: null,
@@ -295,14 +295,14 @@
             }
           }
         }
-        this.getNoticeList(this.searchParam)
+        this.fetchNoticeList(this.searchParam)
           .then(_ => {
             this.pageCount = Math.ceil(this.noticeTotalCount / this.pageSize)
           })
       },
       pageHandler () {
-        this.searchParam.startPageNumber = (this.current - 1) * this.pageSize + 1
-        this.searchParam.endPageNumber = this.pageSize * this.current
+        this.searchParam.startNo = (this.current - 1) * this.pageSize + 1
+        this.searchParam.endNo = this.pageSize * this.current
         this.searchFormEvent()
       },
     },

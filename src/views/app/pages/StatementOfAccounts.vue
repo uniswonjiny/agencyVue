@@ -167,10 +167,10 @@
       modal: false,
     }),
     methods: {
-      ...mapActions(['getSettlementInfo']),
+      ...mapActions(['fetchSettlementInfo']),
       searchHandler () {
         this.$refs.dialog.save(this.date);
-        this.getSettlementInfo(this.date.replace('-', ''))
+        this.fetchSettlementInfo(this.date.replace('-', ''))
       },
       allowedDates (val) {
         const tempDate = new Date()
