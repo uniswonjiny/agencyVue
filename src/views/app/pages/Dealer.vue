@@ -89,7 +89,11 @@
               />
             </v-col>
           </v-row>
-          <v-col cols="12">
+          <!-- 대리점인경우 -->
+          <v-col
+            cols="12"
+            v-if="loggedInUser.dealer_kind == 34"
+          >
             <div class="d-flex pr-1 justify-space-between pb-2">
               <div class="d-flex align-center">
                 <v-icon
@@ -104,6 +108,28 @@
                 </h5>
               </div>
             </div>
+          </v-col>
+          <!-- 지사인경우 -->
+          <v-col
+            cols="12"
+            v-if="loggedInUser.dealer_kind == 33"
+          >
+            <div class="d-flex align-center">
+              <v-icon
+                small
+                color="primary"
+                class="mr-3"
+              >
+                mdi-circle
+              </v-icon>
+              <v-overflow-btn
+                v-if="loggedInUser.dealer_kind == 33"
+                dense
+                class="mx-auto"
+                :items="dropdownMenu"
+                item-value="text"
+                v-model="selectedMenu"
+              /></div>
           </v-col>
 
           <v-col>
@@ -433,6 +459,11 @@
       SearchAdd,
     },
     data: () => ({
+      selectedMenu: '지사 리스트',
+      dropdownMenu: [
+        { text: '지사 리스트', type: 'A' },
+        { text: '대리점 리스트', type: 'B' },
+      ],
       current: 1,
       pageSize: 10,
       pageCount: 1,
@@ -493,7 +524,7 @@
       },
     },
     methods: {
-      ...mapActions(['getAgencyCount', 'fetchAgencyList']),
+      ...mapActions(['fetchAgencyCount', 'fetchAgencyList']),
       ...mapMutations(['setAgencyList', 'setAgencyCount']),
       initData () {
         if (this.dates.length === 0) {
@@ -529,6 +560,12 @@
             if (el.key === 'name') this.payLoad.bprprr = el.value
           }
         }
+
+        if (this.loggedInUser.dealer_kind === 33) {
+          if (this.selectedMenu === '지사 리스트') this.payLoad.type = 'a'
+          if (this.selectedMenu === '대리점 리스트') this.payLoad.type = 'b'
+        }
+
         this.payLoad.startDt = this.dates[0]
         this.payLoad.endDt = this.dates[1]
         this.fetchAgencyList(this.payLoad).then(_ => {

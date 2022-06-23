@@ -182,7 +182,7 @@ export default {
         })
     },
     // setAgencyBelongInfo 속정보 가져오기
-    getAgencyCount ({ commit, getters }) {
+    fetchAgencyCount ({ commit, getters }) {
       commit('setLoading', true)
       return axios({
         method: 'get',

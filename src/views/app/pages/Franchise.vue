@@ -428,7 +428,27 @@
               <v-card-text>
                 <v-simple-table fixed-header>
                   <thead>
-                    <tr>
+                    <tr v-if="selectedMenu=== '가맹점리스트'">
+                      <th
+                        class="text-left"
+                        style="max-width:20px"
+                      >
+                        순번
+                      </th>
+                      <th class="text-center">
+                        아이디
+                      </th>
+                      <th class="text-center">
+                        상호
+                      </th>
+                      <th
+                        class="text-right"
+                        style="max-width:20px"
+                      >
+                        대표자
+                      </th>
+                    </tr>
+                    <tr v-if="selectedMenu=== '대리점가맹점리스트'">
                       <th
                         class="text-left"
                         style="max-width:20px"
@@ -463,7 +483,37 @@
                               hide-actions
                               class="text-caption mx-0 "
                             >
-                              <v-row no-gutters>
+                              <v-row
+                                no-gutters
+                                v-if="selectedMenu=== '가맹점리스트'"
+                              >
+                                <v-col cols="2">
+                                  {{ item.no }}
+                                </v-col>
+                                <v-col
+                                  cols="4"
+                                  class="text-center"
+                                >
+                                  {{ item.usid }}
+                                </v-col>
+                                <v-col
+                                  cols="4"
+                                  class="text-center"
+                                >
+                                  {{ item.companyName }}
+                                </v-col>
+                                <v-col
+                                  cols="2"
+                                  class="text-right"
+                                >
+                                  {{ item.mberName }}
+                                </v-col>
+                              </v-row>
+
+                              <v-row
+                                no-gutters
+                                v-if="selectedMenu=== '대리점가맹점리스트'"
+                              >
                                 <v-col cols="2">
                                   {{ item.no }}
                                 </v-col>

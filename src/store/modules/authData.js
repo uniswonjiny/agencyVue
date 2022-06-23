@@ -5,7 +5,7 @@ export default {
       dealer_id: 'B000241',
       dealer_kind: 33,
       dealer_name: '이성규알리바바지사',
-      dealer_biz_code: '000015',
+      dealer_biz_code: '0000561',
     }, // 숙제! 새로고침 브라우저닫았다 바로 열었을때 로그인 유지하기! 숙제!!
     loading: false,
     error: null,

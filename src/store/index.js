@@ -1,4 +1,4 @@
-// 템플릿이 네임스페이스를 적용 안한 것이라 네임스페이스 적용할 경우 어찌될찌 알수 없음
+// 주의 ) !! 네임 스페이스 적용안함
 
 import Vuex from 'vuex'
 import Vue from 'vue'
@@ -8,6 +8,7 @@ import themeConfig from './modules/themeConfig'
 import authData from './modules/authData'
 import verticalSidebar from './modules/verticalSidebar'
 import basicInfo from './modules/basicInfo'
+import InCome from './modules/inCome'
 
 // Load Vuex
 Vue.use(Vuex)
@@ -21,5 +22,6 @@ export default new Vuex.Store({
     authData,
     verticalSidebar,
     basicInfo,
+    InCome,
   },
 })

@@ -501,9 +501,9 @@
                       v-for="(item , index) in this.noticeList"
                       :key="index"
                     >
-                      <td>{{ item.title }}</td>
+                      <td>{{ item.type }}</td>
                       <td>
-                        {{ item.content }}
+                        {{ item.title }}
                       </td>
                     </tr>
                   </tbody>
@@ -529,7 +529,7 @@
       preDay.setMonth(preDay.getMonth() - 5)
       preDay = dataType(preDay)
 
-      this.agencyCount()
+      this.fetchAgencyCount()
 
       this.fetchNoticeList({
         startDt: preDay,
@@ -546,7 +546,7 @@
       ...mapGetters(['agencyCountInfo', 'loggedInUser', 'noticeList']),
     },
     methods: {
-      ...mapActions(['agencyCount', 'fetchNoticeList']),
+      ...mapActions(['fetchAgencyCount', 'fetchNoticeList']),
     },
   }
 </script>
