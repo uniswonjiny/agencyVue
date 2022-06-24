@@ -159,7 +159,7 @@ export default {
                   commit,
                   getters,
                 }) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'get',
         url: baseUrl + `/agency/basicInfo/${getters.loggedInUser.dealer_id}`,
@@ -178,12 +178,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // setAgencyBelongInfo 속정보 가져오기
     fetchAgencyCount ({ commit, getters }) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'get',
         url: baseUrl + `/agency/agencyCount/${getters.loggedInUser.dealer_id}/${getters.loggedInUser.dealer_kind}`,
@@ -195,12 +195,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // 매출조회
     fetchTransactionList ({ commit }, payLoad) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/transactionList',
@@ -215,12 +215,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // 대리점 지사 정보 조회
     fetchAgencyList ({ commit }, payload) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/agencyList',
@@ -234,12 +234,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // 대리점 정산서
     fetchSettlementInfo ({ commit, getters }, val) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'get',
         url: baseUrl + `/agency/settlementInfo/${getters.loggedInUser.dealer_id}/${val}`,
@@ -251,12 +251,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // 공지사항
     fetchNoticeList ({ commit, getters }, payload) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       console.log(payload)
       return axios({
         method: 'post',
@@ -271,12 +271,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // 가맹점
     fetchMerchantManagementList ({ commit, getters }, payload) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/merchantManagementList',
@@ -290,12 +290,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
     // 대리점 등록 하기
     regAgency( { dispatch, commit }, payload) {
-      commit('setLoading', true)
+      commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/insertRegAgency',
@@ -308,13 +308,13 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('setLoading', false)
+          commit('toggleThemeLoadingState', false)
         })
     },
 
     // 대리점 등록 요청 목록
   fetchRegAgencyList({ commit } , payload) {
-    commit('setLoading', true)
+    commit('toggleThemeLoadingState', true)
     return axios({
       method: 'post',
       url: baseUrl + '/agency/selectRegAgencyList',
@@ -328,7 +328,7 @@ export default {
     })
       .finally(_ => {
         commit('clearError')
-        commit('setLoading', false)
+        commit('toggleThemeLoadingState', false)
       })
   }
 

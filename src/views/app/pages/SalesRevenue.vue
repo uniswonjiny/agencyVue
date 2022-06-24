@@ -228,7 +228,7 @@
                 :key="'first'+index"
                 class="text-center"
               >
-                <td v-for="content in contentArr">
+                <td v-for="(content , index) in contentArr" :key="index">
                   {{ content }}
                 </td>
 
@@ -513,7 +513,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapMutations} from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
   export default {
     name: 'SalesRevenue',

@@ -3,114 +3,87 @@ import { baseUrl } from '@/store/CONSTANT'
 import { currency } from '@/filter/filter'
 export default {
   state: {
-    joinSalesSum: 0, // 가맹점 매출수익
-    mojibSalesSum: 0, // 모집대리점매출 수익
-    sosokSalesSum: 0, // 소속대리점매출 수익
-    joinSum: 0, // 가맹비수익
-    recommendSum: 0, // 추천지사 수익
-
-    joinSalesList: [], // 가맹점 매출목록
-    joinSalesCount:0, // // 가맹점 매출전체수
-
-    joinAmountList: [], // 가맹비수익
-    joinAmountCount: 0, // 가맹비수익
-
-    mojibSalesList: [], // 모집대리점매출 목록
-    mojibSalesCount: 0,  // 모집대리점매출전체수
-
-    sosokSalesList: [], // 소속대리점매출 목록
-    sosokSalesCount: 0, // 소속대리점매출 전체수
-
-    recommendList: [], // 추천지사 수익 목록
-    recommendCount: 0, // 추천지사 전체수
+    // 가맹점 매출수익 합
+    merchantIncomeSum: 0,
+    // 가맹점 매출수익 목록
+    merchantIncomeList: [],
+    // 가맹점 매출수익 전체 갯수
+    merchantIncomeCount: 0,
+    // 모집대리점 매출수익 합
+    recruitmentAgencySalesSum: 0,
+    // 모집대리점 매출수익 목록
+    recruitmentAgencySalesList: [],
+    // 모집대리점 매출수익 전체갯수
+    recruitmentAgencySalesCount: 0,
+    // 가맹비 수익 합
+    agencyMemberShipFeeSum: 0,
+    // 가맹비 수익 목록
+    agencyMemberShipFeeList: [],
+    // 가맹비 수익 전체 갯수
+    agencyMemberShipFeeCount: 0,
   },
   getters: {
-    getJoinSalesList: state => state.joinSalesList,
-    getJoinSalesCount: state => currency(state.joinSalesCount),
-    getMojibSalesList: state => state.mojibSalesList,
-    getMojibSalesCount: state => currency(state.mojibSalesCount),
-    getSosokSalesList: state => state.sosokSalesList,
-    getSosokSalesCount: state => currency(state.sosokSalesCount),
-    getRecommendList: state => state.recommendList,
-    getRecommendCount: state => currency(state.recommendCount),
-    getJoinAmountList: state => state.joinAmountList, // 가맹비수익
-    getJoinAmountCount: state => currency(state.joinAmountCount), // 가맹비수익
+    // 가맹점 매출수익
+    getMerchantIncomeSum: state => currency(state.merchantIncomeSum),
+    getMerchantIncomeList: state => state.merchantIncomeList,
+    getMerchantIncomeCount: state => currency(state.merchantIncomeCount),
 
-    // 가맹전 매출수익
-    getJoinSalesSum: state => currency(state.joinSalesSum),
-    // 모집대리점매출 수익
-    getMojibSalesSum: state => currency(state.mojibSalesSum),
-    // 소속대리점매출 수익
-    getSosokSalesSum: state => currency(state.sosokSalesSum),
-    // 가맹비수익
-    getJoinSum: state => currency(state.joinSum),
-    // 추천지사 수익
-    getRecommendSum: state => currency(state.recommendSum),
-    // 합계수익
-    getBenefitSum: state => currency(state.joinSalesSum + state.mojibSalesSum + state.sosokSalesSum + state.joinSum + state.recommendSum)
+    // 모집대리점 매출수익
+    getRecruitmentAgencySalesSum: state => currency(state.recruitmentAgencySalesSum),
+    getRecruitmentAgencySalesList: state => state.recruitmentAgencySalesList,
+    getRecruitmentAgencySalesCount: state => currency(state.recruitmentAgencySalesCount),
+
+    // 가맹비 수익
+    getAgencyMemberShipFeeSum: state => currency(state.agencyMemberShipFeeSum),
+    getAgencyMemberShipFeeList: state => state.agencyMemberShipFeeList,
+    getAgencyMemberShipFeeCount: state => currency(state.agencyMemberShipFeeCount),
 
   },
   mutations: {
-    setJoinSalesSum(state, data) {
-      state.joinSalesSum = data
+    // 가맹점 매출수익
+    setMerchantIncomeSum (state, val) {
+      state.merchantIncomeSum = val
     },
-    setMojibSalesSum(state, data) {
-      state.mojibSalesSum = data
+    setMerchantIncomeList (state, list) {
+      state.merchantIncomeList = list
     },
-    setSosokSalesSum(state, data) {
-      state.sosokSalesSum = data
+    setMerchantIncomeCount (state, val) {
+      state.merchantIncomeCount = val
     },
-    setJoinSum(state, data) {
-      state.joinSum = data
+    // 모집대리점 매출수익
+    setRecruitmentAgencySalesSum (state, val) {
+      state.recruitmentAgencySalesSum = val
     },
-    setRecommendSum(state, data) {
-      state.recommendSum = data
+    setRecruitmentAgencySalesList (state, list) {
+      state.recruitmentAgencySalesList = list
     },
-    setJoinSalesList(state, data) {
-      state.joinSalesList = data
+    setRecruitmentAgencySalesCount (state, val) {
+      state.recruitmentAgencySalesCount = val
     },
-    setJoinSalesCount(state, data) {
-      state.joinSalesCount = data
+    // 가맹비 수익
+    getAgencyMemberShipFeeSum (state, val) {
+      state.agencyMemberShipFeeSum = val
     },
-    setMojibSalesList(state, data) {
-      state.mojibSalesList = data
+    getAgencyMemberShipFeeList (state, list) {
+      state.agencyMemberShipFeeList = list
     },
-    setMojibSalesCount(state, data) {
-      state.mojibSalesCount = data
-    },
-    setSosokSalesList(state, data) {
-      state.sosokSalesList = data
-    },
-    setSosokSalesCount(state, data) {
-      state.sosokSalesCount = data
-    },
-    setRecommendList(state, data) {
-      state.recommendList = data
-    },
-    setRecommendCount(state, data) {
-      state.recommendCount = data
-    },
-    setJoinAmountList(state, data) {
-      state.joinAmountList = data
-    },
-    setJoinAmountCount(state, data) {
-      state.joinAmountCount = data
+    getAgencyMemberShipFeeCount (state, val) {
+      state.agencyMemberShipFeeCount = val
     },
   },
   actions: {
-    // 수익 매출 전체 합 목록
+    // 가맹점 매출수익 fetchIncomeInfo
     fetchMerchantIncomeSum ({ commit }, data) {
       commit('setLoading', true)
       return axios({
         method: 'post',
-        url: baseUrl + '/agency/fetchIncomeInfoSum',
+        url: baseUrl + '/agency/fetchIncomeInfo',
         data,
       }).then(res => {
-        commit('setJoinSalesSum', res.data.joinSalesSum)
-        commit('setMojibSalesSum', res.data.mojibSalesSum)
-        commit('setSosokSalesSum', res.data.sosokSalesSum)
-        commit('setJoinSum', res.data.joinSum)
-        return commit('setRecommendSum', res.data.recommendSum)
+        commit('setMerchantIncomeSum', res.data.count)
+        commit('setMerchantIncomeList', res.data.count)
+        commit('setMerchantIncomeCount', res.data.count)
+        return commit('setMerchantManagementList', res.data.data)
       }).catch(error => {
         console.log(error)
         throw error.response.data.message
@@ -120,118 +93,5 @@ export default {
           commit('setLoading', false)
         })
     },
-
-    // 가맹점 매출목록
-    fetchJoinSalesList ({ commit }, data) {
-      commit('setLoading', true)
-      return axios({
-        method: 'post',
-        url: baseUrl + '/agency/fetchIncomeInfoSum',
-        data,
-      }).then(res => {
-        commit('setJoinSalesSum', res.data.joinSalesSum)
-        commit('setMojibSalesSum', res.data.mojibSalesSum)
-        commit('setSosokSalesSum', res.data.sosokSalesSum)
-        commit('setJoinSum', res.data.joinSum)
-        return commit('setRecommendSum', res.data.recommendSum)
-      }).catch(error => {
-        console.log(error)
-        throw error.response.data.message
-      })
-        .finally(_ => {
-          commit('clearError')
-          commit('setLoading', false)
-        })
-    },
-
-    // 가맹비수익
-    fetchJoinAmountList ({ commit }, data) {
-      commit('setLoading', true)
-      return axios({
-        method: 'post',
-        url: baseUrl + '/agency/fetchIncomeInfoSum',
-        data,
-      }).then(res => {
-        commit('setJoinSalesSum', res.data.joinSalesSum)
-        commit('setMojibSalesSum', res.data.mojibSalesSum)
-        commit('setSosokSalesSum', res.data.sosokSalesSum)
-        commit('setJoinSum', res.data.joinSum)
-        return commit('setRecommendSum', res.data.recommendSum)
-      }).catch(error => {
-        console.log(error)
-        throw error.response.data.message
-      })
-        .finally(_ => {
-          commit('clearError')
-          commit('setLoading', false)
-        })
-    },
-    // 모집대리점매출 목록
-    fetchMojibSalesList ({ commit }, data) {
-      commit('setLoading', true)
-      return axios({
-        method: 'post',
-        url: baseUrl + '/agency/fetchIncomeInfoSum',
-        data,
-      }).then(res => {
-        commit('setJoinSalesSum', res.data.joinSalesSum)
-        commit('setMojibSalesSum', res.data.mojibSalesSum)
-        commit('setSosokSalesSum', res.data.sosokSalesSum)
-        commit('setJoinSum', res.data.joinSum)
-        return commit('setRecommendSum', res.data.recommendSum)
-      }).catch(error => {
-        console.log(error)
-        throw error.response.data.message
-      })
-        .finally(_ => {
-          commit('clearError')
-          commit('setLoading', false)
-        })
-    },
-    // 소속대리점매출 목록
-    fetchSosokSalesList ({ commit }, data) {
-      commit('setLoading', true)
-      return axios({
-        method: 'post',
-        url: baseUrl + '/agency/fetchIncomeInfoSum',
-        data,
-      }).then(res => {
-        commit('setJoinSalesSum', res.data.joinSalesSum)
-        commit('setMojibSalesSum', res.data.mojibSalesSum)
-        commit('setSosokSalesSum', res.data.sosokSalesSum)
-        commit('setJoinSum', res.data.joinSum)
-        return commit('setRecommendSum', res.data.recommendSum)
-      }).catch(error => {
-        console.log(error)
-        throw error.response.data.message
-      })
-        .finally(_ => {
-          commit('clearError')
-          commit('setLoading', false)
-        })
-    },
-    // 추천지사 수익 목록
-    fetchRecommendList ({ commit }, data) {
-      commit('setLoading', true)
-      return axios({
-        method: 'post',
-        url: baseUrl + '/agency/fetchIncomeInfoSum',
-        data,
-      }).then(res => {
-        commit('setJoinSalesSum', res.data.joinSalesSum)
-        commit('setMojibSalesSum', res.data.mojibSalesSum)
-        commit('setSosokSalesSum', res.data.sosokSalesSum)
-        commit('setJoinSum', res.data.joinSum)
-        return commit('setRecommendSum', res.data.recommendSum)
-      }).catch(error => {
-        console.log(error)
-        throw error.response.data.message
-      })
-        .finally(_ => {
-          commit('clearError')
-          commit('setLoading', false)
-        })
-    },
-
   },
 }

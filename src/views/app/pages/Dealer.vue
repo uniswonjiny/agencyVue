@@ -525,7 +525,7 @@
     },
     methods: {
       ...mapActions(['fetchAgencyCount', 'fetchAgencyList']),
-      ...mapMutations(['setAgencyList', 'setAgencyCount']),
+      ...mapMutations(['setAgencyList', 'setAgencyCount', 'toggleThemeLoadingState']),
       initData () {
         if (this.dates.length === 0) {
           const today = dataType()
@@ -553,6 +553,7 @@
       },
 
       searchFormEvent (arrObj) {
+
         if (!!arrObj && arrObj.length > 0) {
           for (const el of arrObj) {
             if (el.key === 'agency') this.payLoad.cmpnm = el.value
