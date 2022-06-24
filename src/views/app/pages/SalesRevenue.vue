@@ -1,13 +1,7 @@
 <template>
   <div>
-    <v-row justify="center">
-      <v-col cols="12">
-        <v-card dark>
-          <h5 class=" my-auto py-auto font-weight-medium">
-            대리점 로그인
-          </h5>
-        </v-card>
-      </v-col>
+    <v-row justify="center" v-if=" loggedInUser.dealer_kind && loggedInUser.dealer_kind == 34">
+      <<!-- 대리점 로그인 -->
       <v-col
         cols="12"
         xl="8"
@@ -95,7 +89,7 @@
                 가맹점 매출 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                745,000 원
+                {{getJoinSalesSum}} 원
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -110,7 +104,7 @@
                 모집대리점 매출 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                1,948,100 원
+                 {{getMojibSalesSum}} 원
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -125,7 +119,7 @@
                 가맹비 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                91,000 원
+                {{getJoinSum}} 원
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -146,7 +140,7 @@
                 합계 수익
               </v-list-item-title>
               <v-list-item-title class="text-right">
-                1,124,124,000 원
+                {{getBenefitSum}} 원
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -184,7 +178,6 @@
                       v-bind="attrs"
                       class="shadow-none"
                       v-on="on"
-
                     >
                       {{ gubunTitle }}
                       <v-icon>mdi-chevron-down</v-icon>
@@ -231,11 +224,11 @@
               </thead>
               <tbody>
               <tr
-                v-for="(contentArr , index) in  tableContentList1"
+                v-for="(contentArr , index) in tableContentList1"
                 :key="'first'+index"
                 class="text-center"
               >
-                <td v-for="content in  contentArr">
+                <td v-for="content in contentArr">
                   {{ content }}
                 </td>
 
@@ -246,22 +239,16 @@
             <v-pagination
               v-model="currentPage"
               class="my-4"
-              :length="totoalPage"
+              :length="pageCount"
             />
 
 
           </v-card-text>
         </base-card>
       </v-col>
-
-
-      <v-col cols="12">
-        <v-card dark>
-          <h5 class=" my-auto py-auto font-weight-medium">
-            지사 로그인
-          </h5>
-        </v-card>
-      </v-col>
+    </v-row>
+<!-- 지사인경우 -->
+    <v-row justify="center" v-if=" loggedInUser.dealer_kind && loggedInUser.dealer_kind == 33">
       <v-col
         cols="12"
         xl="8"
@@ -349,7 +336,7 @@
                 가맹점 매출 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                745,000 원
+                {{getJoinSalesSum}} 원
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -364,7 +351,7 @@
                 소속 대리점 매출 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                1,948,100 원
+                {{getSosokSalesSum}} 원
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -379,7 +366,7 @@
                 가맹비 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                91,000 원
+                {{getJoinSum}} 원
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -394,7 +381,7 @@
                 추천지사 수익
               </v-list-item-subtitle>
               <v-list-item-title class="text-right">
-                91,000 원
+                {{getRecommendSum}} 원
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -415,7 +402,7 @@
                 합계 수익
               </v-list-item-title>
               <v-list-item-title class="text-right">
-                1,124,124,000 원
+                {{getBenefitSum}} 원
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -453,7 +440,6 @@
                       v-bind="attrs"
                       class="shadow-none"
                       v-on="on"
-
                     >
                       {{ gubunTitle2 }}
                       <v-icon>mdi-chevron-down</v-icon>
@@ -515,7 +501,7 @@
             <v-pagination
               v-model="currentPage"
               class="my-4"
-              :length="totoalPage"
+              :length="pageCount"
             />
 
 
@@ -527,11 +513,13 @@
 </template>
 
 <script>
+import {mapActions, mapGetters, mapMutations} from "vuex";
+
   export default {
     name: 'SalesRevenue',
     data: () => ({
       currentPage: 1,
-      totoalPage: 10,
+      pageCount: 10,
       dates: ['2022-04-01', '2022-04-20'],
       menuTwo: false,
       gubunTitle: '가맹점 매출 수익',
@@ -550,105 +538,6 @@
       agencyMenuHeader3: [
         '순번', '대리점', '등록일', '수수료수익',
       ],
-      agencyMenuDataList1: [
-        {
-          no: 1,
-          agencyName: '에이비씨',
-          amount: 1100000,
-          benefit: 600,
-        }, {
-          no: 2,
-          agencyName: '에이비씨1',
-          amount: 1200000,
-          benefit: 700,
-        }, {
-          no: 3,
-          agencyName: '에이비씨2',
-          amount: 1300000,
-          benefit: 800,
-        }, {
-          no: 4,
-          agencyName: '에이비씨3',
-          amount: 1400000,
-          benefit: 900,
-        }, {
-          no: 5,
-          agencyName: '에이비씨4',
-          amount: 1500000,
-          benefit: 1100,
-        }, {
-          no: 6,
-          agencyName: '에이비씨5',
-          amount: 1600000,
-          benefit: 1500,
-        },
-      ],
-      agencyMenuDataList2: [
-        {
-          no: 1,
-          agencyName: '모집대리점명1',
-          amount: 1100000,
-          benefit: 600,
-        }, {
-          no: 1,
-          agencyName: '모집대리점명2',
-          amount: 1200000,
-          benefit: 700,
-        }, {
-          no: 1,
-          agencyName: '모집대리점명3',
-          amount: 1300000,
-          benefit: 800,
-        }, {
-          no: 1,
-          agencyName: '모집대리점명4',
-          amount: 1400000,
-          benefit: 900,
-        }, {
-          no: 1,
-          agencyName: '모집대리점명5',
-          amount: 1500000,
-          benefit: 1100,
-        }, {
-          no: 1,
-          agencyName: '모집대리점명6',
-          amount: 1600000,
-          benefit: 1500,
-        },
-      ],
-      agencyMenuDataList3: [
-        {
-          no: 1,
-          agencyName: '에이비씨',
-          created_dt: '2020-01-01',
-          benefit: 600,
-        }, {
-          no: 1,
-          agencyName: '에이비씨1',
-          created_dt: '2020-02-11',
-          benefit: 700,
-        }, {
-          no: 1,
-          agencyName: '에이비씨2',
-          created_dt: '2021-03-26',
-          benefit: 800,
-        }, {
-          no: 1,
-          agencyName: '에이비씨3',
-          created_dt: '2021-05-23',
-          benefit: 900,
-        }, {
-          no: 1,
-          agencyName: '에이비씨4',
-          created_dt: '2021-11-01',
-          benefit: 1100,
-        }, {
-          no: 1,
-          agencyName: '에이비씨5',
-          created_dt: '2022-01-01',
-          benefit: 1500,
-        },
-      ],
       gubunTitle2: '소속대리점 매출 수익',
       menuList2: [
         '소속대리점 매출 수익',
@@ -666,6 +555,28 @@
       ],
     }),
     computed: {
+      ...mapGetters(
+        [
+          'getJoinSalesSum',
+          'getMojibSalesSum',
+          'getSosokSalesSum',
+          'getJoinSum',
+          'getRecommendSum',
+          'getBenefitSum',
+          'getJoinSalesList',
+          'getJoinSalesCount',
+          'getMojibSalesList',
+          'getMojibSalesCount',
+          'getSosokSalesList',
+          'getSosokSalesCount',
+          'getRecommendList',
+          'getRecommendCount',
+          'getJoinAmountList',
+          'getJoinAmountCount',
+          'loggedInUser',
+        ]
+      ),
+
       dateRangeText () {
         return this.dates.join(' ~ ')
       },
@@ -684,18 +595,21 @@
       },
       // 대리점인 경유 메뉴선택에 따른 내용선택
       tableContentList1 () {
-        const tempArr = []
-        let targetArr = null
-        if (this.gubunTitle === '가맹점 매출 수익') {
-          targetArr = this.agencyMenuDataList1
+        let targetArr = []
+        let tempArr = []
+        if (targetArr.gubunTitle === '가맹점 매출 수익') {
+          tempArr= this.getJoinSalesList
+          this.pageCount = Math.ceil(this.getJoinSalesCount / this.pageSize)
         } else if (this.gubunTitle === '모집대리점 매출 수익') {
-          targetArr = this.agencyMenuDataList2
+          targetArr= this.getMojibSalesList
+          this.pageCount = Math.ceil(this.getMojibSalesCount / this.pageSize)
         } else if (this.gubunTitle === '가맹비 수익') {
-          targetArr = this.agencyMenuDataList3
+          targetArr= this.getJoinAmountList;
+          this.pageCount = Math.ceil(this.getJoinAmountCount / this.pageSize)
         } else {
-          targetArr = this.agencyMenuDataList1
+          targetArr= []
+          this.pageCount = 1;
         }
-
         targetArr.map(item => {
           const firstArr = []
           // eslint-disable-next-line no-unused-vars
@@ -704,16 +618,62 @@
           }
           tempArr.push(firstArr)
         })
-
-        return tempArr
+        return tempArr;
       },
     },
     methods: {
+      ...mapActions([
+        'fetchMerchantIncomeSum',
+        'fetchJoinSalesList',
+        'fetchJoinAmountList',
+        'fetchMojibSalesList',
+        'fetchSosokSalesList',
+        'fetchRecommendList',
+      ]),
+      ...mapMutations([
+        'setJoinSalesList',
+        'setJoinSalesCount',
+        'setMojibSalesList',
+        'setMojibSalesCount',
+        'setSosokSalesList',
+        'setSosokSalesCount',
+        'setRecommendList',
+        'setRecommendCount',
+        'setJoinAmountList',
+        'setJoinAmountCount',
+      ]),
+      // 목록 데이터 모두 초기화 제거 -- 잔류 데이터로 혼란있었음
+      initListData(){
+        this.currentPage= 1
+        this.pageCount= 10
+        this.setJoinSalesList([])
+        this.setJoinSalesCount(0)
+        this.setMojibSalesList([])
+        this.setMojibSalesCount(0)
+        this.setSosokSalesList([])
+        this.setSosokSalesCount(0)
+        this.setRecommendList([])
+        this.setRecommendCount(0)
+        this.setJoinAmountList([])
+        this.setJoinAmountCount(0)
+      },
+      // 대리점
       agencyChange (val) {
         this.gubunTitle = val
+        this.initListData()
+        if(val === '가맹점 매출 수익') this.fetchJoinSalesList()
+        else if(val === '모집대리점 매출 수익') this.fetchMojibSalesList()
+        else if(val === '가맹비 수익') this.fetchJoinAmountList()
+
       },
+
+      // 지사
       agencyChange2 (val) {
         this.gubunTitle2 = val
+        this.initListData()
+        if(val === '소속대리점 매출 수익') this.fetchSosokSalesList()
+        else if(val === '가맹비 수익') this.fetchJoinAmountList()
+        else if(val === '추천 지사 수익') this.fetchRecommendList()
       },
     },
   }

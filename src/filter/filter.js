@@ -1,7 +1,8 @@
 
 // 현금 세자리 컴마
 const currency = (val) => {
-  if (!val) return ''
+  console.log(val)
+  if (!val) return 0
   val = Number(val)
   return val.toFixed(0).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, '$1,');
 }

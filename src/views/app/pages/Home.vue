@@ -387,7 +387,7 @@
                     가맹점 매출 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    350,000 원
+                   {{ getJoinSalesSum }} 원
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
@@ -401,7 +401,7 @@
                     소속 대리점 매출 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    11,000,100 원
+                    {{ getSosokSalesSum }} 원
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
@@ -415,7 +415,7 @@
                     가맹비 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    100,000 원
+                    {{ getJoinSum }} 원
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
@@ -429,7 +429,7 @@
                     추천지사 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    123,456,789,000 원
+                    {{ getRecommendSum }} 원
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -450,7 +450,7 @@
                     합계 수익
                   </v-list-item-title>
                   <v-list-item-title class="text-right">
-                    9,876,543,210 원
+                   {{getBenefitSum}} 원
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -541,12 +541,30 @@
         type: null,
         dealerKind: this.loggedInUser.dealer_kind,
       })
+      this.fetchMerchantIncomeSum({startDt: preDay,
+        endDt: today,
+        startNo: 1,
+        endNo: 5,
+        title: null,
+        content: null,
+        type: null,
+        dealerKind: this.loggedInUser.dealer_kind,})
     },
     computed: {
-      ...mapGetters(['agencyCountInfo', 'loggedInUser', 'noticeList']),
+      ...mapGetters(
+        ['agencyCountInfo',
+          'loggedInUser',
+          'noticeList',
+          'getJoinSalesSum',
+          'getMojibSalesSum',
+          'getSosokSalesSum',
+          'getJoinSum',
+          'getRecommendSum',
+          'getBenefitSum',
+        ]),
     },
     methods: {
-      ...mapActions(['fetchAgencyCount', 'fetchNoticeList']),
+      ...mapActions(['fetchAgencyCount', 'fetchNoticeList','fetchMerchantIncomeSum']),
     },
   }
 </script>
