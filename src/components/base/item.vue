@@ -10,7 +10,6 @@
     "
     :height="48"
     class="text-18 pl-6"
-    @click="setSelectedMenu(item.title)"
   >
     <v-list-item-icon
       v-if="text"
@@ -79,8 +78,5 @@
       },
     },
 
-    methods: {
-      ...mapMutations(['setSelectedMenu']),
-    },
   }
 </script>

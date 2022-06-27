@@ -435,6 +435,7 @@
   export default {
     name: 'Dealer',
     created () {
+      this.setSelectedMenu('대리점관리');
       const todayDate = new Date()
       const todayYear = todayDate.getUTCFullYear()
       const todayMonth = Number(todayDate.getUTCMonth()) + 1 < 10 ? '0' + (Number(todayDate.getUTCMonth()) + 1) : Number(todayDate.getUTCMonth()) + 1
@@ -444,13 +445,15 @@
       this.initData()
     },
     mounted () {
+
       this.payLoad.startNo = 0
       this.payLoad.endNo = 10
       this.payLoad.startDt = this.dates[0]
       this.payLoad.endDt = this.dates[1]
       this.payLoad.userId = this.loggedInUser.dealer_id
       this.payLoad.dealerKind = this.loggedInUser.dealer_kind
-      this.getAgencyCount()
+      this.fetchAgencyCount()
+
     },
     components: {
       'analytic-one-card': analyticOneCard,
@@ -525,7 +528,7 @@
     },
     methods: {
       ...mapActions(['fetchAgencyCount', 'fetchAgencyList']),
-      ...mapMutations(['setAgencyList', 'setAgencyCount', 'toggleThemeLoadingState']),
+      ...mapMutations(['setAgencyList', 'setAgencyCount', 'toggleThemeLoadingState','setSelectedMenu']),
       initData () {
         if (this.dates.length === 0) {
           const today = dataType()

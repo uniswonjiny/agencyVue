@@ -312,6 +312,7 @@
     },
 
     mounted () {
+      this.setSelectedMenu('거래내역')
       this.initData()
     },
 
@@ -368,6 +369,7 @@
     methods: {
       ...mapActions(['fetchTransactionList']),
       ...mapMutations(['setTransactionList', 'setTransactionCount']),
+      ...mapMutations(['setSelectedMenu']),
       // 데이터 초기화
       initData () {
         if (this.dates.length === 0) {

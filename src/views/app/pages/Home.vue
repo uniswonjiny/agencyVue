@@ -21,10 +21,7 @@
                 </h5>
               </div>
               <div>
-                <a
-                  href="#"
-                  class="font-weight-medium"
-                >자세히 보기</a>
+                <router-link class="font-weight-medium" to="salesRevenue">자세히 보기</router-link>
                 <v-btn icon>
                   <v-icon>mdi-arrow-right-thin</v-icon>
                 </v-btn>
@@ -81,10 +78,7 @@
                 </h5>
               </div>
               <div>
-                <a
-                  href="#"
-                  class="font-weight-medium"
-                >자세히 보기</a>
+                <router-link class="font-weight-medium" to="salesRevenue">자세히 보기</router-link>
                 <v-btn icon>
                   <v-icon>mdi-arrow-right-thin</v-icon>
                 </v-btn>
@@ -107,7 +101,7 @@
                     가맹점 매출 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    745,000 원
+                    {{getJoinSalesSum}} 원
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
@@ -122,7 +116,7 @@
                     모집대리점 매출 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    1,948,100 원
+                   {{getMojibSalesSum}}원
                   </v-list-item-title>
                 </v-list-item>
                 <v-list-item>
@@ -137,7 +131,7 @@
                     가맹비 수익
                   </v-list-item-subtitle>
                   <v-list-item-title class="text-right">
-                    91,000 원
+                    {{getJoinSum}} 원
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -158,7 +152,7 @@
                     합계 수익
                   </v-list-item-title>
                   <v-list-item-title class="text-right">
-                    1,124,124,000 원
+                    {{getBenefitSum}} 원
                   </v-list-item-title>
                 </v-list-item>
               </v-list>
@@ -181,10 +175,7 @@
                 </h5>
               </div>
               <div>
-                <a
-                  href="#"
-                  class="font-weight-medium"
-                >자세히 보기</a>
+                <router-link class="font-weight-medium" to="notice">자세히 보기</router-link>
                 <v-btn icon>
                   <v-icon>mdi-arrow-right-thin</v-icon>
                 </v-btn>
@@ -204,75 +195,18 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>대리점 공지</td>
-                      <td>
-                        <v-chip
-                          x-small
-                          class="mr-2"
-                          color="red"
-                          dark
-                        >
-                          필독
-                        </v-chip>
-                        가맹점 모집 유의사항
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>가맹비 공지</td>
-                      <td>
-                        <div class="d-flex align-center">
-                          <v-sheet class="warning lighten-5 px-1 mr-2 mr-2 rounded">
-                            <v-icon class="warning--text text-caption">
-                              mdi-call-made
-                            </v-icon>
-                          </v-sheet>
-                          <p class="ma-0 heading-muted">
-                            자가거래
-                            <span class="text-warning mr-1">금지</span>
-                          </p>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>무이자 공지</td>
-                      <td class="success--text">
-                        X월 무이자안내
-                      </td>
-                    </tr>
-                    <tr>
-                      <td
-                        colspan="2"
-                        class="pa-0"
+                    <tr v-for="(item, index) in noticeList">
+                      <td><v-chip
+                        x-small
+                        class="mr-2"
+                        color="red"
+                        dark
                       >
-                        <v-expansion-panels
-                          class="mt-5 mx-0 pa-0"
-                          flat
-                          dark
-                        >
-                          <v-expansion-panel>
-                            <v-expansion-panel-header>
-                              <div class="d-flex flex-wrap align-center">
-                                <div style=" flex: 1 1 0;">
-                                  <v-icon color="red">
-                                    mdi-bell
-                                  </v-icon>
-                                  지사
-                                </div>
-                                <div style=" flex: 1 1 0;">
-                                  <v-icon color="success">
-                                    mdi-check-circle
-                                  </v-icon>
-                                  영업정책(2020년 04월 01일 이후)
-                                </div>
-                              </div>
-                            </v-expansion-panel-header>
-                            <v-expansion-panel-content>
-                              지사 대리점 가맹점 공지사항 <span class="font-weight-bold text-warning mr-1">운영수수료 변경 </span> 공지사항 확인 필요
-                              <br> 정책은 계속 변경됩니다.
-                            </v-expansion-panel-content>
-                          </v-expansion-panel>
-                        </v-expansion-panels>
+                        {{item.type}}
+                      </v-chip></td>
+                      <td>
+
+                        {{item.title}}
                       </td>
                     </tr>
                   </tbody>
@@ -303,10 +237,7 @@
                 </h5>
               </div>
               <div>
-                <a
-                  href="#"
-                  class="font-weight-medium"
-                >자세히 보기</a>
+                <router-link class="font-weight-medium" to="dealer">자세히 보기</router-link>
                 <v-btn icon>
                   <v-icon>mdi-arrow-right-thin</v-icon>
                 </v-btn>
@@ -362,10 +293,7 @@
                 </h5>
               </div>
               <div>
-                <a
-                  href="#"
-                  class="font-weight-medium"
-                >자세히 보기</a>
+                <router-link class="font-weight-medium" to="salesRevenue">자세히 보기</router-link>
                 <v-btn icon>
                   <v-icon>mdi-arrow-right-thin</v-icon>
                 </v-btn>
@@ -474,10 +402,7 @@
                 </h5>
               </div>
               <div>
-                <a
-                  href="#"
-                  class="font-weight-medium"
-                >자세히 보기</a>
+                <router-link class="font-weight-medium" to="notice">자세히 보기</router-link>
                 <v-btn icon>
                   <v-icon>mdi-arrow-right-thin</v-icon>
                 </v-btn>
@@ -518,17 +443,17 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
   import { dataType } from '@/filter/filter'
 
   export default {
     name: 'Home',
-    mounted () {
+    created () {
+      this.setSelectedMenu('Home')
       const today = dataType()
       let preDay = new Date()
       preDay.setMonth(preDay.getMonth() - 5)
       preDay = dataType(preDay)
-
       this.fetchAgencyCount()
 
       this.fetchNoticeList({
@@ -565,6 +490,8 @@
     },
     methods: {
       ...mapActions(['fetchAgencyCount', 'fetchNoticeList','fetchMerchantIncomeSum']),
+      ...mapMutations(['setSelectedMenu']),
     },
+
   }
 </script>

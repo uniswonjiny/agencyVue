@@ -53,6 +53,8 @@ export default {
       }
       return state.noticeList
     },
+
+    // 디비데이터가 숫자만 들어갈 곳에 없을 경우 0 이 들어간 경우도 있고 해당없음을 넣은 경우 디비부분 처리가 매우 위태로움 데이터타입이 불분명해서 후속 처리를 단순하게 숫자 문자변환으로 여기면 에러나버린다.
     settlementInfo: state => {
       if (state.settlementInfo) {
         if (state.settlementInfo.bizType === 'Y') {
@@ -155,11 +157,8 @@ export default {
   },
   actions: {
     // 기본정보 , 계좌정보 , 모집정보 가져오기
-    agencyInfo ({
-                  commit,
-                  getters,
-                }) {
-      commit('toggleThemeLoadingState', true)
+    agencyInfo ({ commit, getters }) {
+      //commit('toggleThemeLoadingState', true)
       return axios({
         method: 'get',
         url: baseUrl + `/agency/basicInfo/${getters.loggedInUser.dealer_id}`,
@@ -178,12 +177,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+  //        commit('toggleThemeLoadingState', false)
         })
     },
     // setAgencyBelongInfo 속정보 가져오기
     fetchAgencyCount ({ commit, getters }) {
-      commit('toggleThemeLoadingState', true)
+      //commit('toggleThemeLoadingState', true)
       return axios({
         method: 'get',
         url: baseUrl + `/agency/agencyCount/${getters.loggedInUser.dealer_id}/${getters.loggedInUser.dealer_kind}`,
@@ -195,12 +194,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+        //  commit('toggleThemeLoadingState', false)
         })
     },
     // 매출조회
     fetchTransactionList ({ commit }, payLoad) {
-      commit('toggleThemeLoadingState', true)
+      //commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/transactionList',
@@ -215,12 +214,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+    //      commit('toggleThemeLoadingState', false)
         })
     },
     // 대리점 지사 정보 조회
     fetchAgencyList ({ commit }, payload) {
-      commit('toggleThemeLoadingState', true)
+      //commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/agencyList',
@@ -234,12 +233,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+     //     commit('toggleThemeLoadingState', false)
         })
     },
     // 대리점 정산서
     fetchSettlementInfo ({ commit, getters }, val) {
-      commit('toggleThemeLoadingState', true)
+      //commit('toggleThemeLoadingState', true)
       return axios({
         method: 'get',
         url: baseUrl + `/agency/settlementInfo/${getters.loggedInUser.dealer_id}/${val}`,
@@ -251,13 +250,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+       //   commit('toggleThemeLoadingState', false)
         })
     },
     // 공지사항
     fetchNoticeList ({ commit, getters }, payload) {
-      commit('toggleThemeLoadingState', true)
-      console.log(payload)
+     // commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/noticeList',
@@ -271,12 +269,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+          //commit('toggleThemeLoadingState', false)
         })
     },
     // 가맹점
     fetchMerchantManagementList ({ commit, getters }, payload) {
-      commit('toggleThemeLoadingState', true)
+     // commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/merchantManagementList',
@@ -290,12 +288,12 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+      //    commit('toggleThemeLoadingState', false)
         })
     },
     // 대리점 등록 하기
     regAgency( { dispatch, commit }, payload) {
-      commit('toggleThemeLoadingState', true)
+    //  commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/insertRegAgency',
@@ -308,13 +306,13 @@ export default {
       })
         .finally(_ => {
           commit('clearError')
-          commit('toggleThemeLoadingState', false)
+       //   commit('toggleThemeLoadingState', false)
         })
     },
 
     // 대리점 등록 요청 목록
   fetchRegAgencyList({ commit } , payload) {
-    commit('toggleThemeLoadingState', true)
+  // commit('toggleThemeLoadingState', true)
     return axios({
       method: 'post',
       url: baseUrl + '/agency/selectRegAgencyList',
@@ -328,7 +326,7 @@ export default {
     })
       .finally(_ => {
         commit('clearError')
-        commit('toggleThemeLoadingState', false)
+        //commit('toggleThemeLoadingState', false)
       })
   }
 

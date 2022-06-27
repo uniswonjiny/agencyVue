@@ -197,12 +197,10 @@
     },
     methods: {
       ...mapActions(['changeCompactVerticalSidebarDrawer']),
-      ...mapMutations(['setSelectedMenu']),
       toggleSidebar () {
         this.changeCompactVerticalSidebarDrawer()
       },
       selectedMenuHandler (title, url) {
-        this.setSelectedMenu(title)
         this.$router.push(url)
       },
       mapItem (item) {
