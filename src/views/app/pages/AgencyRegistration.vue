@@ -146,40 +146,127 @@
                       <v-expansion-panels
                         flat
                       >
-                        <v-expansion-panel>
+                        <v-expansion-panel
+                          v-for="(item , index) in this.getReqAgencyList"
+                        >
                           <v-expansion-panel-header
                             hide-actions
                             class="text-caption px-auto mx-auto"
                           >
                             <v-row>
                               <v-col cols="2">
-                                1
+                                {{ item.no }}
                               </v-col>
                               <v-col
                                 cols="3"
                                 class="text-center"
                               >
-                                22/01/02 14:00:01
+                                {{ item.createdAt }}
                               </v-col>
                               <v-col
                                 cols="3"
                                 class="px-auto text-center"
                               >
-                                대리점
+                                {{ item.companyName }}
                               </v-col>
                               <v-col
                                 cols="4"
+                                class="px-auto text-right"
                               >
-                                영업유의사항 안내
+                                {{ item.status}}
                               </v-col>
                             </v-row>
                           </v-expansion-panel-header>
                           <v-expansion-panel-content>
                             <v-divider />
                             <v-card flat>
-                              <v-card-title>영업유의사항 안내</v-card-title>
                               <v-card-text>
-                                유사투자자문업체 가맹점 모집시 대리점 해지 가능합니다. 유의하여 주시기 바랍니다.
+                                <div class="mt-3">
+                                  <div
+                                    class="d-flex justify-space-between"
+                                  >
+                                    <p
+                                      class="text--disabled mb-1 text-15 mr-2"
+                                      style="min-width: 100px"
+                                    >
+                                      모집대리점
+                                    </p>
+                                    <p
+                                      class="text-success mb-1 text-15"
+                                    >
+                                      {{ item.bossBizName }}
+                                    </p>
+                                  </div>
+
+                                  <div
+                                    class="d-flex justify-space-between"
+                                  >
+                                    <p
+                                      class="text--disabled mb-1 text-15 mr-2"
+                                      style="min-width: 100px"
+                                    >
+                                      대표자명
+                                    </p>
+                                    <p
+                                      class="text-success mb-1 text-15"
+                                    >
+                                      {{ item.memberName }}
+                                    </p>
+                                  </div>
+
+                                  <div
+                                    class="d-flex justify-space-between"
+                                  >
+                                    <p
+                                      class="text--disabled mb-1 text-15 mr-2"
+                                      style="min-width: 100px"
+                                    >
+                                      연락처
+                                    </p>
+                                    <p
+                                      class="text-success mb-1 text-15"
+                                    >
+                                      {{ item.mobileNumber }}
+                                    </p>
+                                  </div>
+
+                                  <div
+                                    class="d-flex justify-space-between"
+                                  >
+                                    <p
+                                      class="text--disabled mb-1 text-15 mr-2"
+                                      style="min-width: 100px"
+                                    >
+                                      이메일 주소
+                                    </p>
+                                    <p
+                                      class="text-success mb-1 text-15"
+                                    >
+                                      {{ item.email }}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div
+                                  class="d-flex justify-space-between"
+                                  v-if="item.history.length > 0"
+                                >
+                                  <p
+                                    class="text--disabled mb-1 text-15 mr-2"
+                                    style="min-width: 100px"
+                                  >
+                                    진행내역
+                                  </p>
+                                  <p
+                                    class="text-success mb-1 text-15 text-right"
+                                  >
+                                    <span v-for="(itema , index) in item.history">
+                                        {{ itema.createdAt }}  /  {{ itema.status }}
+                                    <br />
+                                    </span>
+                                  </p>
+                                </div>
+
                               </v-card-text>
                             </v-card>
                           </v-expansion-panel-content>
@@ -200,13 +287,22 @@
 
 <script>
   import SearchAdd from '@/components/base/SearchAdd'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
+  import { dataType } from '@/filter/filter'
 
   export default {
     name: 'AgencyRegistration',
     components: {
       SearchAdd,
     },
+
+    created () {
+      this.setSelectedMenu('대리점등록목록')
+      this.initData()
+
+    },
     computed: {
+      ...mapGetters(['loggedInUser', 'getReqAgencyList']),
       dateRangeText () {
         return this.dates.join(' ~ ')
       },
@@ -215,6 +311,7 @@
     data: () => ({
       dates: ['2022-04-01', '2022-04-20'],
       menuTwo: false,
+      pageSize: 10,
       searchList: [
         {
           text: '대리점명',
@@ -228,6 +325,35 @@
         },
       ],
     }),
+
+    methods: {
+      ...mapActions(['fetchRegAgencyList']),
+      ...mapMutations(['setSelectedMenu']),
+      initData () {
+        const today = dataType()
+        let preDay = new Date()
+        preDay.setMonth(preDay.getMonth() - 5)
+        preDay = dataType(preDay)
+        this.current = 1
+        this.searchParam = {
+          startDt: preDay,
+          endDt: today,
+          startNo: 1,
+          endNo: this.pageSize,
+          type: null,
+          dealerKind: this.loggedInUser.dealer_kind,
+          bossBizCode: this.loggedInUser.dealer_biz_code,
+          companyName: null,
+          memberName: null,
+          mobileNumber: null,
+          email: null,
+          status: null,
+        }
+        this.dates = [preDay, today]
+        this.fetchRegAgencyList( this.searchParam)
+      },
+
+    },
 
   }
 </script>

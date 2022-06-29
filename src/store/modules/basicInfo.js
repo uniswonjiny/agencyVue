@@ -18,11 +18,12 @@ export default {
     noticeTotalCount: 0, // 공지사항 전체목록,
     merchantManagementList: [], // 가맹점 목록
     merchantManagementCount: 0, // 가맹점 전체 숫자
-    reqAgencyList: [] , // 등록요청대리점 목록
-    reqAgencycount: 0 , // 등록요청대리점 목록 개수
+    reqAgencyList: [], // 등록요청대리점 목록
+    reqAgencycount: 0, // 등록요청대리점 목록 개수
 
   },
   getters: {
+    getReqAgencyList: state => state.reqAgencyList,
     agencyBasicInfo: state => state.agencyBasicInfo,
     agencyBankInfo: state => state.agencyBankInfo,
     agencyRecruitInfo: state => state.agencyRecruitInfo,
@@ -45,6 +46,7 @@ export default {
     noticeTotalCount: state => state.noticeTotalCount,
     noticeList: state => {
       for (const el of state.noticeList) {
+        //el.content = el.content.replace(/(\n|\r\n)/g, '<br />') -- v-textarea 사용 안할경우 개행문자 처리
         if (el.type === 'N') el.type = '일반'
         if (el.type === 'M') el.type = '무이자'
         if (el.type === '1') el.type = '필수'
@@ -54,7 +56,7 @@ export default {
       return state.noticeList
     },
 
-    // 디비데이터가 숫자만 들어갈 곳에 없을 경우 0 이 들어간 경우도 있고 해당없음을 넣은 경우 디비부분 처리가 매우 위태로움 데이터타입이 불분명해서 후속 처리를 단순하게 숫자 문자변환으로 여기면 에러나버린다.
+    // 디비데이터가 숫자만 들어갈 곳에 없을 경우 0 이 들어간 경우도 있고 해당없음을 넣은 경우 디비부분 처리가 매우 난감함 데이터타입이 불분명해서 후속 처리를 단순하게 숫자 문자변환으로 여기면 에러나버린다.
     settlementInfo: state => {
       if (state.settlementInfo) {
         if (state.settlementInfo.bizType === 'Y') {
@@ -292,14 +294,14 @@ export default {
         })
     },
     // 대리점 등록 하기
-    regAgency( { dispatch, commit }, payload) {
+    regAgency ({ dispatch, commit }, payload) {
     //  commit('toggleThemeLoadingState', true)
       return axios({
         method: 'post',
         url: baseUrl + '/agency/insertRegAgency',
         data: payload,
       }).then(res => {
-        return dispatch('fetchRegAgencyList', payload)
+        return this.$router.push('/app/pages/agencyRegistration')
       }).catch(error => {
         console.log(error)
         throw error.response.data.message
@@ -311,7 +313,7 @@ export default {
     },
 
     // 대리점 등록 요청 목록
-  fetchRegAgencyList({ commit } , payload) {
+  fetchRegAgencyList ({ commit }, payload) {
   // commit('toggleThemeLoadingState', true)
     return axios({
       method: 'post',

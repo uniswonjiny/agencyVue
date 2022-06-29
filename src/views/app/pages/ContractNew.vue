@@ -186,9 +186,12 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'ContractNew',
+    created () {
+      this.setSelectedMenu('대리점등록')
+    },
     computed: {
       ...mapGetters(['loggedInUser']),
       disabled () {
@@ -215,6 +218,7 @@
     }),
     methods: {
       ...mapActions(['regAgency']),
+      ...mapMutations(['setSelectedMenu']),
       submitEvent () {
         const payload = {
           bossBizCode: this.loggedInUser.dealer_biz_code,

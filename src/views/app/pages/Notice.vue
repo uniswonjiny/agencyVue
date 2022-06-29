@@ -169,7 +169,11 @@
                               <v-card flat>
                                   <v-card-title>{{ item.title }}</v-card-title>
                                 <v-card-text>
-                                  {{ item.content }}
+                                  <v-textarea
+                                    :value="item.content"
+                                    outlined
+                                    readonly
+                                  />
                                 </v-card-text>
                               </v-card>
                             </v-expansion-panel-content>
@@ -213,7 +217,7 @@
 
 <script>
   import SearchAdd from '@/components/base/SearchAdd'
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { dataType } from '@/filter/filter'
 
   export default {
@@ -260,9 +264,11 @@
     created () {
       this.initData()
       this.searchFormEvent()
+      this.setSelectedMenu('공지사항')
     },
     methods: {
       ...mapActions(['fetchNoticeList']),
+      ...mapMutations(['setSelectedMenu']),
       initData () {
         const today = dataType()
         let preDay = new Date()
