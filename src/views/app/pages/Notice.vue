@@ -213,7 +213,7 @@
 
 <script>
   import SearchAdd from '@/components/base/SearchAdd'
-  import { mapActions, mapGetters } from 'vuex'
+  import {mapActions, mapGetters, mapMutations} from 'vuex'
   import { dataType } from '@/filter/filter'
 
   export default {
@@ -258,12 +258,15 @@
     },
 
     created () {
+      this.setSelectedMenu('공지사항')
       this.initData()
       this.searchFormEvent()
     },
     methods: {
       ...mapActions(['fetchNoticeList']),
+      ...mapMutations(['setSelectedMenu']),
       initData () {
+
         const today = dataType()
         let preDay = new Date()
         preDay.setMonth(preDay.getMonth() - 5)

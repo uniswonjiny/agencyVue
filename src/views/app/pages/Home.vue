@@ -473,6 +473,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex'
         title: null,
         content: null,
         type: null,
+        userId: this.loggedInUser.dealer_id,
         dealerKind: this.loggedInUser.dealer_kind,})
     },
     computed: {

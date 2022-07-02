@@ -523,7 +523,15 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       dates: ['2022-04-01', '2022-04-20'],
       menuTwo: false,
       gubunTitle: '가맹점 매출 수익',
-
+      payLoad: {
+        userId: "a",
+        startDt:"a",
+        endDt: "",
+        startNo: 0,
+        endNo: 0,
+        dealerKind: 0,
+        type:""
+      },
       menuList: [
         '가맹점 매출 수익',
         '모집대리점 매출 수익',
@@ -661,7 +669,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       agencyChange (val) {
         this.gubunTitle = val
         this.initListData()
-        if(val === '가맹점 매출 수익') this.fetchJoinSalesList()
+        if(val === '가맹점 매출 수익') this.fetchJoinSalesList(this.payLoad)
         else if(val === '모집대리점 매출 수익') this.fetchMojibSalesList()
         else if(val === '가맹비 수익') this.fetchJoinAmountList()
 
@@ -671,7 +679,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       agencyChange2 (val) {
         this.gubunTitle2 = val
         this.initListData()
-        if(val === '소속대리점 매출 수익') this.fetchSosokSalesList()
+        if(val === '소속대리점 매출 수익') this.fetchSosokSalesList(this.payLoad)
         else if(val === '가맹비 수익') this.fetchJoinAmountList()
         else if(val === '추천 지사 수익') this.fetchRecommendList()
       },

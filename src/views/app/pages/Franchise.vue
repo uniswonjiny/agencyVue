@@ -717,6 +717,7 @@
       this.payLoad.endDt = this.dates[1]
       this.payLoad.userId = this.loggedInUser.dealer_id
       this.payLoad.dealerKind = this.loggedInUser.dealer_kind
+      this.setSelectedMenu('가맹점관리')
 
     },
     data: () => ({
@@ -768,6 +769,7 @@
     methods: {
       ...mapActions(['fetchMerchantManagementList']),
       ...mapMutations(['setMerchantManagementCount', 'setMerchantManagementList']),
+      ...mapMutations(['setSelectedMenu']),
       initData () {
         if (this.dates.length === 0) {
           const today = dataType()

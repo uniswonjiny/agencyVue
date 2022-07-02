@@ -123,6 +123,7 @@ export default {
 
     // 가맹점 매출목록
     fetchJoinSalesList ({ commit }, data) {
+      console.log(data)
       commit('setLoading', true)
       return axios({
         method: 'post',
