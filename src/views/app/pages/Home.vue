@@ -465,6 +465,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex'
         content: null,
         type: null,
         dealerKind: this.loggedInUser.dealer_kind,
+        userId: this.loggedInUser.dealer_id,
       })
       this.fetchMerchantIncomeSum({startDt: preDay,
         endDt: today,
@@ -475,6 +476,7 @@ import {mapActions, mapGetters, mapMutations} from 'vuex'
         type: null,
         userId: this.loggedInUser.dealer_id,
         dealerKind: this.loggedInUser.dealer_kind,})
+
     },
     computed: {
       ...mapGetters(

@@ -169,7 +169,11 @@
                               <v-card flat>
                                   <v-card-title>{{ item.title }}</v-card-title>
                                 <v-card-text>
-                                  {{ item.content }}
+                                  <v-textarea
+                                    :value="item.content"
+                                    outlined
+                                    readonly
+                                  />
                                 </v-card-text>
                               </v-card>
                             </v-expansion-panel-content>
@@ -261,6 +265,7 @@
       this.setSelectedMenu('공지사항')
       this.initData()
       this.searchFormEvent()
+      this.setSelectedMenu('공지사항')
     },
     methods: {
       ...mapActions(['fetchNoticeList']),
