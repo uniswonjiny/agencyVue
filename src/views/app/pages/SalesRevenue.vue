@@ -514,9 +514,23 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import {dataType} from "@/filter/filter";
 
   export default {
     name: 'SalesRevenue',
+    created () {
+      const today = dataType()
+      let preDay = new Date()
+      preDay.setMonth(preDay.getMonth() - 1)
+      preDay = dataType(preDay)
+      this.dates = [preDay, today]
+      this.setSelectedMenu('수익현황')
+      this.gubunTitle = '가맹점 매출 수익'
+      this.gubunTitle2 = '소속대리점 매출 수익'
+
+       this.agencyChange('가맹점 매출 수익')
+      // this.agencyChange2('소속대리점 매출 수익')
+    },
     data: () => ({
       currentPage: 1,
       pageCount: 10,
@@ -524,13 +538,15 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
       menuTwo: false,
       gubunTitle: '가맹점 매출 수익',
       payLoad: {
-        userId: "a",
-        startDt:"a",
-        endDt: "",
-        startNo: 0,
-        endNo: 0,
-        dealerKind: 0,
-        type:""
+        startDt: this.dates[0],
+        endDt: this.dates[1],
+        startNo: 1,
+        endNo: 5,
+        title: null,
+        content: null,
+        type: null,
+        dealerKind: this.loggedInUser.dealer_kind,
+        userId: this.loggedInUser.dealer_id,
       },
       menuList: [
         '가맹점 매출 수익',
@@ -649,6 +665,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
         'setRecommendCount',
         'setJoinAmountList',
         'setJoinAmountCount',
+        'setSelectedMenu'
       ]),
       // 목록 데이터 모두 초기화 제거 -- 잔류 데이터로 혼란있었음
       initListData(){
@@ -664,14 +681,25 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
         this.setRecommendCount(0)
         this.setJoinAmountList([])
         this.setJoinAmountCount(0)
+        this.payLoad= {
+          startDt: this.dates[0],
+            endDt: this.dates[1],
+            startNo: 1,
+            endNo: 5,
+            title: null,
+            content: null,
+            type: null,
+            dealerKind: this.loggedInUser.dealer_kind,
+            userId: this.loggedInUser.dealer_id,
+        }
       },
       // 대리점
       agencyChange (val) {
         this.gubunTitle = val
         this.initListData()
         if(val === '가맹점 매출 수익') this.fetchJoinSalesList(this.payLoad)
-        else if(val === '모집대리점 매출 수익') this.fetchMojibSalesList()
-        else if(val === '가맹비 수익') this.fetchJoinAmountList()
+        else if(val === '모집대리점 매출 수익') this.fetchMojibSalesList(this.payLoad)
+        else if(val === '가맹비 수익') this.fetchJoinAmountList(this.payLoad)
 
       },
 
@@ -680,8 +708,8 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
         this.gubunTitle2 = val
         this.initListData()
         if(val === '소속대리점 매출 수익') this.fetchSosokSalesList(this.payLoad)
-        else if(val === '가맹비 수익') this.fetchJoinAmountList()
-        else if(val === '추천 지사 수익') this.fetchRecommendList()
+        else if(val === '가맹비 수익') this.fetchJoinAmountList(this.payLoad)
+        else if(val === '추천 지사 수익') this.fetchRecommendList(this.payLoad)
       },
     },
   }

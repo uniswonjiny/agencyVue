@@ -451,9 +451,8 @@ import {mapActions, mapGetters, mapMutations} from 'vuex'
     created () {
       this.setSelectedMenu('Home')
       const today = dataType()
-      let preDay = new Date()
-      preDay.setMonth(preDay.getMonth() - 5)
-      preDay = dataType(preDay)
+      let date = new Date();
+      let preDay = dataType(new Date(date.getFullYear(), date.getMonth(), 1))
       this.fetchAgencyCount()
 
       this.fetchNoticeList({

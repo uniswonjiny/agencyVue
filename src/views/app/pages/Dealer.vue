@@ -371,7 +371,7 @@
                                         class="text--disabled mb-1 text-15 mr-2"
                                         style="min-width: 100px"
                                       >
-                                        게좌
+                                        계좌
                                       </p>
                                       <p
                                         class="text-success mb-1 text-15"
